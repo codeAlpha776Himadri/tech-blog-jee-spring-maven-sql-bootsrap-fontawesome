@@ -1,4 +1,5 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -32,38 +33,38 @@
         <div class="row">
 
             <div class="col-md-4 offset-4 bg-primary-local" style="color: white;">
-                <form action="Register" method="post">
+                <form id="signup-form" action="Register" method="post">
                       <div style="height: 28px"></div>
                       <h4 class="text-center mt-3">
                         <div class="header">Register <span class="fa fa-user"></span></div>
                       </h4>
                       <div class="mb-3">
                         <label for="formGroupExampleInput" class="form-label">Username: </label>
-                        <input name="user_name" required type="text" class="form-control" id="formGroupExampleInput" placeholder="Enter name...">
+                        <input name="user_name" required type="text" class="form-control" id="user_name" placeholder="Enter name...">
                       </div>
                       <div class="mb-3">
                         <label for="formGroupExampleInput2" class="form-label">Email: </label>
-                        <input name="user_email" required type="email" class="form-control" id="formGroupExampleInput2" placeholder="Enter email...">
+                        <input name="user_email" required type="email" class="form-control" id="user_email" placeholder="Enter email...">
                       </div>
                       <div class="mb-3">
                         <label for="formGroupExampleInput2" class="form-label">Password: </label>
-                        <input name="user_password" required type="password" class="form-control" id="formGroupExampleInput2" placeholder="Enter password...">
+                        <input name="user_password" required type="password" class="form-control" id="user_password" placeholder="Enter password...">
                       </div>
                       <div class="mb-3">
                         <label for="form-check form-check-inline" class="form-label">Gender: </label>
                         <br>
                           <div class="form-check form-check-inline">
-                            <input class="form-check-input" type="radio" name="user_gender" id="inlineRadio1" value="male" checked>
+                            <input class="form-check-input" type="radio" name="user_gender" id="user_gender" value="male" checked>
                             <label class="form-check-label" for="inlineRadio1">Male</label>
                           </div>
                           <div class="form-check form-check-inline">
-                            <input class="form-check-input" type="radio" name="user_gender" id="inlineRadio2" value="female">
+                            <input class="form-check-input" type="radio" name="user_gender" id="user_gender" value="female">
                             <label class="form-check-label" for="inlineRadio2">Female</label>
                           </div>
                       </div>
                       <div class="mb-3 mt-4">
                         <div class="form-check">
-                            <input required class="form-check-input" type="checkbox" name="terms_check" value="checked" id="flexCheckChecked" >
+                            <input required class="form-check-input" type="checkbox" name="terms_check" value="checked" id="user_terms_check" >
                             <label class="form-check-label" for="flexCheckChecked">
                               Terms and Conditions
                             </label>
@@ -101,7 +102,83 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz"
         crossorigin="anonymous"></script>
-    <script src="js/index.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.2/sweetalert.min.js"></script>
+
+
+
+
+
+    <!-- <%-- jquery  --%> -->
+
+    <script>
+
+      $(document).ready(() => {
+
+
+        $("#signup-form").submit(e => {
+
+          e.preventDefault() ;
+
+          $("#signup-btn").hide() ; 
+          $("#loader").show() ;
+
+          let form_data = {
+            user_name : $("#user_name").val() , 
+            user_email : $("#user_email").val() , 
+            user_password : $("#user_password").val() , 
+            user_gender : $("input[name='user_gender']:checked").val() , 
+            terms_check : $("#user_terms_check").val() 
+          }
+
+          $.ajax({
+
+            url: "Register" , 
+            type: "POST" , 
+            data : form_data ,
+            success: (data, textStatus, jqXHR) => {
+
+              // console.log(form_data) ;
+              $("#signup-btn").show() ; 
+              $("#loader").hide() ;
+
+              // debug
+              // console.log({"data" : data ,"textStatus" : textStatus, "jqXHR": jqXHR}) ; 
+
+
+              if (data == "Registration success, Please login...") {
+                swal("Welcome to TechBlog","Redirecting to profile page!","success")
+                .then(val => {
+                  window.location.href="profile" ;
+                })
+              }
+              else {
+                swal("Error!",data,"warning") ;
+              }
+
+            }, 
+            error: (data, textStatus, jqXHR) => {
+
+              console.log(form_data) ;
+              $("#signup-btn").show() ; 
+              $("#loader").hide() ;
+
+              swal("Oh! No!!!","Error submitting the form...","warning") ;
+
+            }
+            
+          })
+
+
+
+        })
+
+
+
+      })
+
+
+    </script>
+
 
 </body>
 </html>

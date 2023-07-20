@@ -8,6 +8,7 @@ import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
@@ -44,9 +45,15 @@ public class Register extends HttpServlet {
                 if (userDao.getUserByEmail(useremail) == null) {
 
                     if (userDao.addUser(user)) {
-                        out.println("Registration success, Please login...");
+
+                        HttpSession session = req.getSession(true) ;
+                        User currentStoredUser = userDao.getUserByEmail(useremail) ;
+                        session.setAttribute("user", currentStoredUser);
+                        
+                        out.print("Registration success, Please login...");
+
                     } else {
-                        out.println("Registration error...");
+                        out.print("Registration error...");
                     }
 
                 } else {

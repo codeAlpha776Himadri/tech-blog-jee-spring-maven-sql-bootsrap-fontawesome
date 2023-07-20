@@ -37,7 +37,7 @@
 
                         <div class="col-md-4 offset-4 bg-primary-local" style="color: white;">
 
-                            <form action="Login" method="post">
+                            <form id="login-form" action="Login" method="post">
 
                                 <div style="height: 102px;"></div>
 
@@ -47,16 +47,20 @@
                                 <div class="mb-3">
                                     <label for="formGroupExampleInput2" class="form-label">Email: </label>
                                     <input name="user_email" required type="email" class="form-control"
-                                        id="formGroupExampleInput2" placeholder="Enter email...">
+                                        id="user_email" placeholder="Enter email...">
                                 </div>
                                 <div class="mb-3">
                                     <label for="formGroupExampleInput2" class="form-label">Password: </label>
                                     <input name="user_password" required type="password" class="form-control"
-                                        id="formGroupExampleInput2" placeholder="Enter password...">
+                                        id="user_password" placeholder="Enter password...">
                                 </div>
 
 
                                 <div class="text-center" id="loader" style="font-size: 28px; display: none;">
+                                    <span class="fa fa-circle-o-notch fa-spin"></span>
+                                </div>
+
+                                <div class="text-center" id="loader" style="font-size: 28px; display: none; margin-top: 14px;">
                                     <span class="fa fa-circle-o-notch fa-spin"></span>
                                 </div>
 
@@ -93,7 +97,81 @@
                     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"
                         integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz"
                         crossorigin="anonymous"></script>
-                    <script src="js/index.js"></script>
+                    <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.2/sweetalert.min.js"></script>
+        
+
+
+        <!-- jquery  -->
+        <script>
+
+            $(document).ready(() => {
+
+                console.log("jquery active...") ;
+
+
+                $("#login-form").submit(e => {
+
+                    $("#login-btn").hide() ; 
+                    $("#loader").show() ;
+
+                    e.preventDefault() ; 
+
+                    // console.log($("#user_email").val()," , ",$("#user_password").val())
+
+                    
+                    $.ajax({
+
+                        url: "Login" , 
+                        data: {
+                            user_email: $("#user_email").val() , 
+                            user_password: $("#user_password").val() 
+                        },
+                        type: "POST" ,
+                        timeout: 50000 ,
+                        success: (data,textStatus,jqXHR) => {
+
+                            $("#login-btn").show() ; 
+                            $("#loader").hide() ;
+                            console.log("success: "+data) ;
+
+                            // swal(data)
+                            // .then((value) => {
+                            //     if (data == "login success...") {
+                            //         window.location.href="profile" ;
+                            //     } 
+                            // }); 
+
+                            if (data == "login success...") {
+                                swal("Welcome","Redirecting to profile page!","success")
+                                .then(val => {
+                                window.location.href="profile" ;
+                                })
+                            }
+                            else {
+                                swal("Error!",data,"warning") ;
+                            }
+
+                        }, 
+                        error: (data,textStatus,jqXHR) => {
+
+                            $("#login-btn").show() ; 
+                            $("#loader").hide() ;
+                            console.log("failed: "+data) ;
+
+                            swal("Error submitting the form...","warning") ; 
+
+
+                        }
+
+                    })
+
+                })
+
+            })
+
+
+        </script>
+
 
     </body>
 

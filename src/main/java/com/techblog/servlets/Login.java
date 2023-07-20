@@ -42,9 +42,7 @@ public class Login extends HttpServlet {
                     // login success
                     HttpSession session = req.getSession(true) ;
                     session.setAttribute("user", user); 
-                    out.println("login success...") ; 
-
-                    resp.sendRedirect("profile");
+                    out.print("login success...") ; 
 
                 }
                 else {
