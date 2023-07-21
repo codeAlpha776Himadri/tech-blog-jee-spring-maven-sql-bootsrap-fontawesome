@@ -20,9 +20,7 @@ public class Logout extends HttpServlet {
         HttpSession session = req.getSession(false) ;
         session.invalidate();
         
-        out.println("successfully logged out...") ;
-
-        resp.sendRedirect("login");
+        out.print("successfully logged out...") ;
         
     }
 
@@ -35,9 +33,7 @@ public class Logout extends HttpServlet {
         HttpSession session = req.getSession(false) ;
         session.invalidate();
         
-        out.println("successfully logged out...") ;
-
-        resp.sendRedirect("login");
+        out.print("successfully logged out...") ;
         
     }
 

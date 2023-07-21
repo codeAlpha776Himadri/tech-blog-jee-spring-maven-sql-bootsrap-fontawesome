@@ -17,8 +17,8 @@ public class BlogDaoImpl implements BlogDao {
 
         try {
             
-            String query = "insert into blogs(user_id, blog_tag, blog_content) values(?,?,?) ;" ;
-            this.jdbcTemplate.update(query, blog.getUser_id(), blog.getBlog_tag(), blog.getBlog_content()) ; 
+            String query = "insert into blogs(user_id, blog_tag, blog_content, blog_title) values(?,?,?,?) ;" ;
+            this.jdbcTemplate.update(query, blog.getUser_id() ,blog.getBlog_tag(), blog.getBlog_content(), blog.getBlog_title()) ; 
             isSaved=true ;          
 
         } catch (Exception e) {
@@ -39,7 +39,7 @@ public class BlogDaoImpl implements BlogDao {
 
         try {
             
-            String query = "select blog_id, user_id, blog_tag, blog_content, blog_created_at from blogs where blog_tag=? ;" ;
+            String query = "select blog_id, user_id, blog_tag, blog_content, blog_created_at, blog_title from blogs where blog_tag=? ;" ;
             blogs = this.jdbcTemplate.query(query, new RowMapperImplBlog(), blog_tag) ; 
 
         } catch (Exception e) {
@@ -62,7 +62,7 @@ public class BlogDaoImpl implements BlogDao {
 
         try {
             
-            String query = "select blog_id, user_id, blog_tag, blog_content, blog_created_at from blogs where user_id=? ;" ;
+            String query = "select blog_id, user_id, blog_tag, blog_content, blog_created_at, blog_title from blogs where user_id=? ;" ;
             blogs = this.jdbcTemplate.query(query, new RowMapperImplBlog(), user_id) ; 
 
         } catch (Exception e) {
@@ -85,7 +85,7 @@ public class BlogDaoImpl implements BlogDao {
 
         try {
 
-            String query = "select blog_id, user_id, blog_tag, blog_content, blog_created_at from blogs where blog_id=? ;" ;
+            String query = "select blog_id, user_id, blog_tag, blog_content, blog_created_at,blog_title from blogs where blog_id=? ;" ;
             List<Blog> blogs = this.jdbcTemplate.query(query, new RowMapperImplBlog(), blog_id) ;
             
             if (blogs.size() >= 1) {

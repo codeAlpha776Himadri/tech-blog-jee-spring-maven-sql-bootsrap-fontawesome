@@ -14,7 +14,8 @@
     <title>Tech Blog</title>
 
     <style>
-        .bg-primary-local {
+        .bg-primary-local,
+        .swal-button {
     background-color: rgb(50, 50, 77);
     /* color: red; */
 }

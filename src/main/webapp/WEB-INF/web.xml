@@ -125,6 +125,7 @@
 
   <session-config>
     <session-timeout>
+      <!-- auto invalidate session in 30 minutes -->
       30
     </session-timeout>
   </session-config>
