@@ -2,6 +2,8 @@ package com.techblog.servlets;
 
 import java.util.List;
 
+import javax.servlet.http.HttpServlet;
+
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
@@ -9,7 +11,7 @@ import com.techblog.dao.BlogDao;
 import com.techblog.dao.BlogDaoImpl;
 import com.techblog.entities.Blog;
 
-public class GetBlogs {
+public class GetBlogs extends HttpServlet {
     
 
 
