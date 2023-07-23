@@ -2,6 +2,9 @@ package com.techblog.servlets;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+// import java.sql.Date;
+// import java.text.SimpleDateFormat;
+import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.MultipartConfig;
@@ -13,9 +16,13 @@ import javax.servlet.http.HttpSession;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
+import com.techblog.dao.BlogDao;
+import com.techblog.dao.BlogDaoImpl;
 import com.techblog.dao.UserDao;
 import com.techblog.dao.UserDaoImpl;
+import com.techblog.entities.Blog;
 import com.techblog.entities.User;
+import com.techblog.entities.UserFullDetail;
 
 @MultipartConfig
 public class Register extends HttpServlet {
@@ -28,6 +35,7 @@ public class Register extends HttpServlet {
 
         ApplicationContext user_ctx = new AnnotationConfigApplicationContext("com/techblog/dao");
         UserDao userDao = user_ctx.getBean("UserDao", UserDaoImpl.class);
+        BlogDao blogDao = user_ctx.getBean("BlogDao", BlogDaoImpl.class);
 
         try {
 
@@ -47,8 +55,16 @@ public class Register extends HttpServlet {
                     if (userDao.addUser(user)) {
 
                         HttpSession session = req.getSession(true) ;
+                        
                         User currentStoredUser = userDao.getUserByEmail(useremail) ;
+                        UserFullDetail userDetails = userDao.getUserFullDetailByUserId(currentStoredUser.getUser_id()) ;
+                        
+                        List<Blog> blogs = blogDao.getBlogsByUserId(user.getUser_id()) ;
+                        Integer blogsCount = blogs == null ? 0 : blogs.size() ;
+
                         session.setAttribute("user", currentStoredUser);
+                        session.setAttribute("user-details", userDetails);
+                        session.setAttribute("blogs-count", blogsCount);
                         
                         out.print("Registration success, Please login...");
 
@@ -87,16 +103,25 @@ public class Register extends HttpServlet {
 
     public static void main(String[] args) {
 
-        ApplicationContext user_ctx = new AnnotationConfigApplicationContext("com/techblog/dao");
+        // ApplicationContext user_ctx = new AnnotationConfigApplicationContext("com/techblog/dao");
 
-        UserDao userDao = user_ctx.getBean("UserDao", UserDaoImpl.class);
+        // UserDao userDao = user_ctx.getBean("UserDao", UserDaoImpl.class);
 
         try {
 
-            User test_user = new
-            User("test_name","test_email_new","test_pass","test_gender") ;
+            // User test_user = new
+            // User("Rupali","rupa@gmail.com","rupa","female") ;
 
-            userDao.addUser(test_user) ;
+            // userDao.addUser(test_user) ;
+
+            // userDao.updateUserName(test_user, "new-username") ;
+
+            // System.out.println(userDao.getUserFullDetailByUserId(25)); 
+
+            // User user = userDao.getUserByEmail("rupa@gmail.com") ;
+            // userDao.updateUserDOB(user, new Date(new SimpleDateFormat("dd-MM-yyyy").parse("12-01-1982").getTime())) ;
+
+            // System.out.println(userDao.getUserFullDetailByUserId(user.getUser_id()).getUser_dob()) ;
 
         } catch (Exception e) {
 
@@ -104,7 +129,7 @@ public class Register extends HttpServlet {
 
         } finally {
 
-            ((AnnotationConfigApplicationContext) user_ctx).close();
+            // ((AnnotationConfigApplicationContext) user_ctx).close();
 
         }
 

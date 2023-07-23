@@ -117,8 +117,6 @@
 
                     e.preventDefault() ; 
 
-                    // console.log($("#user_email").val()," , ",$("#user_password").val())
-
                     
                     $.ajax({
 
@@ -134,13 +132,6 @@
                             $("#login-btn").show() ; 
                             $("#loader").hide() ;
                             console.log("success: "+data) ;
-
-                            // swal(data)
-                            // .then((value) => {
-                            //     if (data == "login success...") {
-                            //         window.location.href="profile" ;
-                            //     } 
-                            // }); 
 
                             if (data == "login success...") {
                                 swal("Welcome","Redirecting to profile page!","success")

@@ -3,6 +3,8 @@
 
 <%!
     User user; 
+    UserFullDetail userDetails ; 
+    Integer blogsCount ;  
 %>
 
 <%
@@ -11,6 +13,8 @@
     }
     else {
         user = (User) session.getAttribute("user") ;
+        userDetails = (UserFullDetail) session.getAttribute("user-details") ;
+        blogsCount = (Integer) session.getAttribute("blogs-count") ;
     }
 %>
 
@@ -25,47 +29,6 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
     <script src="https://kit.fontawesome.com/05981e6d7e.js" crossorigin="anonymous"></script>
-    
-
-    <!-- profile csss -->
-
-    <style>
-        .image-container {
-            position: relative;
-        }
-
-        .image {
-            opacity: 1;
-            display: block;
-            width: 100%;
-            height: auto;
-            transition: .5s ease;
-            backface-visibility: hidden;
-        }
-
-        .middle {
-            transition: .5s ease;
-            opacity: 0;
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            -ms-transform: translate(-50%, -50%);
-            text-align: center;
-        }
-
-        .image-container:hover .image {
-            opacity: 0.3;
-        }
-
-        .image-container:hover .middle {
-            opacity: 1;
-        }
-
-    </style>
-
-
-
 
     <style>
         .bg-primary-local,
@@ -89,6 +52,11 @@
             transition: all 0.3s ease-in;
             opacity: 0.8;
         }
+        #preview {
+            height: 92px;
+            width: 92px;
+            border-radius: 50%;
+        }
     </style>
 </head>
 <body>
@@ -101,121 +69,116 @@
 
     <%-- profile content --%>
 
+    
+    <div class="container py-5">
         
-<!-- <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
-<script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
-<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script> -->
-<!-- ------ Include the above in your HEAD tag --------  -->
-
-
-<script src="https://code.jquery.com/jquery-3.7.0.min.js"
-        integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g=" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz"
-        crossorigin="anonymous"></script>
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
-
-<!-- <link rel="stylesheet" href="https://bootswatch.com/4/simplex/bootstrap.min.css"/>   -->
-
-
-<div class="container py-5">
         <div class="row">
-            <div class="col-12">
-                <div class="card">
 
-                    <div class="card-body">
-                        <div class="card-title mb-4">
-                            <div class="d-flex justify-content-start">
-                                <div class="image-container mr-2" style="margin-right: 1rem;">
-                                    <img src="images/default.png" id="imgProfile" style="width: 150px; height: 150px" class="" />
-                                    <div class="middle">
-                                        <input type="button" class="btn btn-secondary" id="btnChangePicture" value="Change" />
-                                        <input type="file" style="display: none;" id="profilePicture" name="file" />
+            <div class="col-md-8 offset-2">
+
+                <div class="card" style="color: rgb(50, 50, 77);">
+
+                    <div class="card-header text-center py-3">
+                        <!-- <%= userDetails.getUser_img()%> -->
+                        <img id="preview" src="images/<%= userDetails.getUser_img()%>" alt="img" >
+                        
+                        <div id="img-update-btn" class="mt-2"  data-bs-toggle="modal" data-bs-target="#upload-img-modal"><a href="#"><span class="fa fa-edit">
+
+                        </span></a></div>
+                        
+                    </div>
+
+                    <div class="card-title text-center mt-2">
+
+                        <b id="username" style="font-size: 18px;"><%= user.getUser_name()%> <span id="username-update-btn"><a href="#"><span class="fa fa-edit"></span></a></span></b>
+
+                    </div>
+
+                    <div class="card-body pt-2">
+
+                        <table class="table">
+                            <tbody>
+                              <tr>
+                                <th scope="row">Total Blogs : </th>
+                                <td><%= blogsCount%></td>
+                                <td></td>
+                              </tr>
+                              <tr>
+                                <th scope="row">Full Name : </th>
+                                <td id="fullname"><%= userDetails.getUser_full_name()%></td>
+                                <td><a href="#"><span id="fullname-update-btn" class="fa fa-edit"></span></a></td>
+                              </tr>
+                              <tr>
+                                <th scope="row">Email : </th>
+                                <td  id="email"><%= user.getUser_email()%> </td>
+                                <td><a href="#"><span id="email-update-btn" class="fa fa-edit"></span></a></td>
+                              </tr>
+                              <tr>
+                                <th scope="row">Password : </th>
+                                <td id="password">********</td>
+                                <td><a href="#"><span id="password-update-btn" class="fa fa-edit"></span></a></td>
+                              </tr>
+                              <tr>
+                                <th scope="row">Gender : </th>
+                                <td><%= user.getUser_gender()%> </td>
+                                <td></td>
+                              </tr>
+                              <tr>
+                                <th scope="row">D.O.B : </th>
+                                <td id="dob"><%= userDetails.getUser_dob()%></td>
+                                <td><a href="#"><span id="dob-update-btn" class="fa fa-edit"></span></a></td>
+                              </tr>
+                              <tr>
+                                <th scope="row">About me : </th>
+                                <td>
+                                    <div id="about" class="container-fluid p-2" style="max-height: 100px;  border: 1px solid rgb(184, 184, 184); border-radius: 3px; overflow-y: scroll;" >
+                                        <%= userDetails.getUser_about_me()%>
                                     </div>
-                                </div>
-                                <div class="userData ml-5">
-                                    <h2 class="d-block" style="font-size: 1.5rem; font-weight: bold"><a href="javascript:void(0);" style="color: rgb(50, 50, 77);"><%= user.getUser_name()%></a></h2>
-                                    <!-- <h6 class="d-block"><a href="javascript:void(0)" style="color: rgb(50, 50, 77);">1,500</a> Video Uploads</h6> -->
-                                    <h6 class="d-block" style="color: rgb(50, 50, 77);"><a href="javascript:void(0)" >300</a> Blog Posts</h6>
-                                </div>
-                                <div class="ml-auto">
-                                    <input type="button" class="btn btn-primary d-none" id="btnDiscard" value="Discard Changes" />
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="row">
-                            <div class="col-12">
-                                <ul class="nav nav-tabs mb-4" id="myTab" role="tablist">
-                                    <li class="nav-item">
-                                        <a class="nav-link active" id="basicInfo-tab" data-toggle="tab" href="#basicInfo" role="tab" aria-controls="basicInfo" aria-selected="true">Basic Info</a>
-                                    </li>
-                                    <!-- <li class="nav-item">
-                                        <a class="nav-link" id="connectedServices-tab" data-toggle="tab" href="#connectedServices" role="tab" aria-controls="connectedServices" aria-selected="false">Connected Services</a>
-                                    </li> -->
-                                </ul>
-                                <div class="tab-content ml-1" id="myTabContent">
-                                    <div class="tab-pane fade show active" id="basicInfo" role="tabpanel" aria-labelledby="basicInfo-tab">
-                                        
-
-                                        <div class="row">
-                                            <div class="col-sm-3 col-md-2 col-5">
-                                                <label style="font-weight:bold;">Full Name</label>
-                                            </div>
-                                            <div class="col-md-8 col-6">
-                                                <%= user.getUser_name()%>
-                                            </div>
-                                        </div>
-                                        <hr />
-
-                                        <div class="row">
-                                            <div class="col-sm-3 col-md-2 col-5">
-                                                <label style="font-weight:bold;">Email</label>
-                                            </div>
-                                            <div class="col-md-8 col-6">
-                                                <%= user.getUser_email()%>
-                                            </div>
-                                        </div>
-                                        <hr />
-                                        
-                                        
-                                        <div class="row">
-                                            <div class="col-sm-3 col-md-2 col-5">
-                                                <label style="font-weight:bold;">Gender</label>
-                                            </div>
-                                            <div class="col-md-8 col-6">
-                                                <%= user.getUser_gender()%>
-                                            </div>
-                                        </div>
-                                        <hr />
-                                        <div class="row">
-                                            <div class="col-sm-3 col-md-2 col-5">
-                                                <label style="font-weight:bold;">Account created at</label>
-                                            </div>
-                                            <div class="col-md-8 col-6">
-                                                <%= user.getUser_created_at()%> 
-                                            </div>
-                                        </div>
-                                        <hr />
-                                        <hr />
-
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
+                                </td>
+                                <td><a href="#"><span id="aboutme-update-btn" class="fa fa-edit"></span></a></td>
+                              </tr>
+                              <tr>
+                                <th scope="row">Account <br>Created at : </th>
+                                <td><%= user.getUser_created_at()%></td>
+                                <td></td>
+                              </tr>
+                            </tbody>
+                          </table>
 
                     </div>
 
                 </div>
+
             </div>
+
         </div>
+
     </div>
 
 
 
     <!-- </div> -->
+
+
+     <!-- Modal -->
+     <div class="modal fade" id="upload-img-modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="img-upload-form" action="UpdateUser" method="post" enctype="multipart/form-data">
+                    <input type="hidden" name="update-parameter" value="user-img">
+                    <input type="file" name="profile-img" id="user-img" class="form-control">
+                </form>
+            </div>
+            <div class="modal-footer">
+            <button id="img-upload-btn" type="submit" form="img-upload" class="btn btn-primary"   data-bs-dismiss="modal">Save changes</button>
+            </div>
+        </div>
+        </div>
+    </div>
 
 
 
@@ -235,55 +198,381 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz"
         crossorigin="anonymous"></script>
-    <script src="js/index.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.2/sweetalert.min.js"></script>
+
 
 
 
     <script>
 
+        $(document).ready(() => {
 
-$(document).ready(function () {
-            $imgSrc = $('#imgProfile').attr('src');
-            function readURL(input) {
+            console.log("jq active...") ;
 
+
+            $("#user-img").change(function() {
+                readURL(this);
+            });
+
+
+
+            $("#img-upload-btn").click(e => {
+
+                e.preventDefault() ;
+
+                // make req to servlet save to db
+
+                     
+                // Build under progress -----
+                
+                console.log($("#img-upload-form")[0]) ;
+
+                let data = new FormData($("#img-upload-form")[0]) ;
+                data.append("update-parameter","user-img") ;
+                data.append("update-value","form-data") ;
+
+                console.log("form-data : ",data) ;
+                
+                $.ajax({
+
+                    url: "UpdateUser" , 
+                    type: "POST", 
+                    data : data ,
+                    success: data => {
+                        if (data == "update success...") {
+                            swal({
+                                text: data , 
+                                icon: "success"
+                            })
+                            .then(val => {
+                                window.location.reload() ;
+                            });
+                        }
+                        else {
+                            swal({
+                                text: data , 
+                                icon: "warning"
+                            });
+                        }
+                    },
+                    error: data => {
+                        console.log(data) ;
+                        swal({
+                            text: "error submitting form..." , 
+                            icon: "warning"
+                        });
+                    },
+                    processData: false , 
+                    contentType: false 
+
+                })
+                
+
+            });
+
+
+            $("#username-update-btn").click(e => {
+
+                e.preventDefault() ;
+                const field = document.querySelector("#username") ;
+                swal({
+                    content: {
+                        title: "Enter new username: " ,
+                        element: "input",
+                        attributes: {
+                        placeholder: "type here...",
+                        type: "text",
+                        value: field.textContent
+                        },
+                    },
+                    buttons: {
+                        cancel: true,
+                        confirm: true
+                    }
+                })
+                .then(val => {
+
+                    if (val) {
+
+                        console.log(val) ;
+
+                        // make ajax req to update in db
+
+                        submitRequest("user-name",val) ;
+
+                    }
+
+                });
+                
+            })
+
+
+
+            $("#fullname-update-btn").click(e => {
+
+                e.preventDefault() ;
+                const field = document.querySelector("#fullname") ;
+                swal({
+                    content: {
+                        title: "Enter full name: " ,
+                        element: "input",
+                        attributes: {
+                        placeholder: "type here...",
+                        type: "text",
+                        value: field.textContent
+                        },
+                    },
+                    buttons: {
+                        cancel: true,
+                        confirm: true
+                    }
+                })
+                .then(val => {
+
+                    if (val) {
+
+                        console.log(val) ;
+
+                        submitRequest("user-full-name",val) ;
+
+                    }
+
+                });
+                
+            });
+
+
+
+            $("#email-update-btn").click(e => {
+
+                e.preventDefault() ;
+                const field = document.querySelector("#email") ;
+                swal({
+                    content: {
+                        title: "Enter new email: " ,
+                        element: "input",
+                        attributes: {
+                        placeholder: "type here...",
+                        type: "email",
+                        value: field.textContent
+                        },
+                    },
+                    buttons: {
+                        cancel: true,
+                        confirm: true
+                    }
+                })
+                .then(val => {
+
+                    if (val) {
+
+                        console.log(val) ;
+
+                        submitRequest("user-email",val) ;
+
+                    }
+
+                });
+                
+            })
+
+
+
+            $("#password-update-btn").click(e => {
+
+                e.preventDefault() ;
+                
+                swal({
+                     content: {
+                        title : "Please enter current password: ", 
+                        element: "input", 
+                        attributes : {
+                            placeholder: "Please enter current password:" ,
+                            type: "text" , 
+                            value: "" 
+                        }
+                     }, 
+                     buttons : {
+                        cancel: true, 
+                        confirm: true 
+                     }
+                })
+                .then(val => {
+
+                    if (val) {
+
+                        if (val == "<%= user.getUser_password()%>") {
+                            // correct 
+
+                            const field = document.querySelector("#password") ;
+                            swal({
+                                content: {
+                                    title: "Enter new password: " ,
+                                    element: "input",
+                                    attributes: {
+                                        placeholder: "Enter new password:",
+                                        type: "text"
+                                    },
+                                }, 
+                                buttons: {
+                                    cancel: true,
+                                    confirm: true
+                                }
+                            })
+                            .then(val => {
+
+                                if (val) {
+
+                                    submitRequest("user-password",val) ;
+
+                                }
+
+                            });
+
+                        }
+                        else {
+                            swal({
+                                text: "Passwords don't match! Try again!" ,
+                                icon: "warning"
+                            });
+                        }
+
+                    }
+
+                })
+
+            })
+
+
+
+            $("#dob-update-btn").click(e => {
+
+                e.preventDefault() ;
+                const field = document.querySelector("#dob") ;
+                swal({
+                    content: {
+                        title: "Enter DOB: " ,
+                        element: "input",
+                        attributes: {
+                        placeholder: "type here...",
+                        type: "date",
+                        value: field.textContent
+                        },
+                    }, 
+                    buttons: {
+                        cancel: true,
+                        confirm: true
+                    }
+                })
+                .then(val => {
+
+                    if (val) {
+
+                        console.log(val) ;
+
+                        submitRequest("user-dob",val) ;
+
+                    }
+
+                });
+                
+            })
+
+
+
+            $("#aboutme-update-btn").click(e => {
+
+                e.preventDefault() ;
+                const field = document.querySelector("#about") ;
+                swal({
+                    content: {
+                        title: "Enter about yourself: " ,
+                        element: "input",
+                        attributes: {
+                        placeholder: "type here...",
+                        type: "textarea",
+                        value: field.textContent
+                        },
+                    },
+                    buttons: {
+                        cancel: true,
+                        confirm: true
+                    }
+                })
+                .then(val => {
+
+                    if (val) {
+
+                        console.log(val) ;
+
+                        submitRequest("user-about-me",val) ;
+
+                    }
+ 
+                });
+                
+            })
+
+
+
+
+            const submitRequest = (update_parameter,update_value) => {
+                
+                $.ajax({
+
+                    url: "UpdateUser", 
+                    type: "POST",
+                    data: {
+                        "update-parameter" : update_parameter, 
+                        "update-value" : update_value   
+                    }, 
+                    timeout: 50000 , 
+                    success: data => {
+                        console.log("Response : "+data) ;
+                        if (data == "update success...") {
+                            swal({
+                                text: "updated successfully..." ,
+                                icon: "success"
+                            })
+                            .then(val => {
+                                window.location.reload() ;
+                            });
+                        }
+                    },
+                    error: data => {
+                        console.log("Response : "+data) ;
+                        swal(data,"warning")
+                        .then(val => {
+                            window.location.reload() ;
+                        });
+                    }
+
+                })
+            }
+
+
+
+            const readURL = (input) => {
                 if (input.files && input.files[0]) {
                     var reader = new FileReader();
-
-                    reader.onload = function (e) {
-                        $('#imgProfile').attr('src', e.target.result);
-                    };
-
+                    reader.onload = e => {
+                        $("#preview").attr("src", e.target.result);
+                    }
                     reader.readAsDataURL(input.files[0]);
+                    console.log("success") ;
+                } else {
+                    $('#preview').attr("src", "images/default.png");
+                    console.log("Fail") ; 
                 }
             }
-            $('#btnChangePicture').on('click', function () {
-                // document.getElementById('profilePicture').click();
-                if (!$('#btnChangePicture').hasClass('changing')) {
-                    $('#profilePicture').click();
-                }
-                else {
-                    // change
-                }
-            });
-            $('#profilePicture').on('change', function () {
-                readURL(this);
-                $('#btnChangePicture').addClass('changing');
-                $('#btnChangePicture').attr('value', 'Confirm');
-                $('#btnDiscard').removeClass('d-none');
-                // $('#imgProfile').attr('src', '');
-            });
-            $('#btnDiscard').on('click', function () {
-                // if ($('#btnDiscard').hasClass('d-none')) {
-                $('#btnChangePicture').removeClass('changing');
-                $('#btnChangePicture').attr('value', 'Change');
-                $('#btnDiscard').addClass('d-none');
-                $('#imgProfile').attr('src', $imgSrc);
-                $('#profilePicture').val('');
-                // }
-            });
-        });
+
+
+        })
+
 
     </script>
+
+
 
 </body>
 </html>

@@ -2,6 +2,7 @@ package com.techblog.servlets;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -12,9 +13,13 @@ import javax.servlet.http.HttpSession;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
+import com.techblog.dao.BlogDao;
+import com.techblog.dao.BlogDaoImpl;
 import com.techblog.dao.UserDao;
 import com.techblog.dao.UserDaoImpl;
+import com.techblog.entities.Blog;
 import com.techblog.entities.User;
+import com.techblog.entities.UserFullDetail;
 
 public class Login extends HttpServlet {
     
@@ -27,6 +32,7 @@ public class Login extends HttpServlet {
 
         ApplicationContext user_ctx = new AnnotationConfigApplicationContext("com/techblog/dao");
         UserDao userDao = user_ctx.getBean("UserDao", UserDaoImpl.class);
+        BlogDao blogDao = user_ctx.getBean("BlogDao", BlogDaoImpl.class);
 
         try {
             
@@ -36,12 +42,23 @@ public class Login extends HttpServlet {
             if (useremail != null && userpass != null) {
 
                 User user = userDao.getUserByEmailAndPassword(useremail, userpass) ;
-
+                UserFullDetail userDetails = null ;
+                List<Blog> blogs = null ;
                 if (user != null) {
+                    userDetails = userDao.getUserFullDetailByUserId(user.getUser_id()) ;
+                    blogs = blogDao.getBlogsByUserId(user.getUser_id()) ;
+                }
+
+                if (user != null && userDetails != null) {
                     
                     // login success
                     HttpSession session = req.getSession(true) ;
+                    int blogCount = blogs == null ? 0 : blogs.size() ;
                     session.setAttribute("user", user); 
+                    session.setAttribute("user-details", userDetails);
+                    session.setAttribute("blogs-count", (Integer) blogCount);
+                    
+
                     out.print("login success...") ; 
 
                 }
@@ -85,8 +102,9 @@ public class Login extends HttpServlet {
 
         try {
 
-            User user = userDao.getUserByEmailAndPassword("hck364864@gmail.com", "123456");
-            System.out.println(user);
+            // User user = userDao.getUserByEmailAndPassword("hck364864@gmail.com", "123456");
+            UserFullDetail userFullDetail = userDao.getUserFullDetailByUserId(25) ;
+            System.out.println(userFullDetail);
 
         } catch (Exception e) {
 
