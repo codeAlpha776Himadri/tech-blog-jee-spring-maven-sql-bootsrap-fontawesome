@@ -22,6 +22,7 @@ public class RowMapperImplBlog implements RowMapper<Blog> {
             blog.setBlog_content(rs.getString(4));
             blog.setBlog_created_at(rs.getTimestamp(5));
             blog.setBlog_title(rs.getString(6));
+            blog.setBlog_code_content(rs.getString(7));
 
 
         } catch (Exception e) {

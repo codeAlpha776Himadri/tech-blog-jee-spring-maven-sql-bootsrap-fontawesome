@@ -53,8 +53,8 @@
             opacity: 0.8;
         }
         #preview {
-            height: 92px;
-            width: 92px;
+            height: 142px;
+            width: 142px;
             border-radius: 50%;
         }
     </style>
@@ -66,96 +66,190 @@
      <%@include file="navbar.jsp"%>
 
 
+    <%-- new profile content --%>
 
-    <%-- profile content --%>
 
-    
-    <div class="container py-5">
-        
-        <div class="row">
-
-            <div class="col-md-8 offset-2">
-
-                <div class="card" style="color: rgb(50, 50, 77);">
-
-                    <div class="card-header text-center py-3">
-                        <!-- <%= userDetails.getUser_img()%> -->
-                        <img id="preview" src="images/<%= userDetails.getUser_img()%>" alt="img" >
-                        
-                        <div id="img-update-btn" class="mt-2"  data-bs-toggle="modal" data-bs-target="#upload-img-modal"><a href="#"><span class="fa fa-edit">
-
-                        </span></a></div>
-                        
+    <section style="background-color: rgb(50, 50, 77);">
+        <div class="container py-5">
+          
+      
+          <div class="row">
+            <div class="col-lg-4">
+              <div class="card mb-4">
+                <div class="card-body text-center">
+                  <img id="preview" src="images/<%= userDetails.getUser_img()%>" alt="avatar"
+                    class="rounded-circle img-fluid" >
+                    <div class="img-edit">
+                        <a href="#"><span id="image-update-btn"  data-bs-toggle="modal" data-bs-target="#upload-img-modal" class="fa fa-edit mar-left"></span></a> 
                     </div>
+                  <h5 class="my-3" id="username"><%= user.getUser_name()%>
+                    <a href="#"><span id="username-update-btn" class="fa fa-edit mar-left"></span></a> 
+                  </h5>
+                  
+                  <p class="text-muted mb-1"><b><%= blogsCount%></b> Blogs</p>
 
-                    <div class="card-title text-center mt-2">
-
-                        <b id="username" style="font-size: 18px;"><%= user.getUser_name()%> <span id="username-update-btn"><a href="#"><span class="fa fa-edit"></span></a></span></b>
-
+                  
+                  <div class="d-flex justify-content-center mb-2">
+                    <button  type="button" class="btn btn-primary"  data-bs-toggle="modal" data-bs-target="#exampleModal"  style="background-color: rgb(50, 50, 77); border: none;">
+                        New Blog
+                    </button>
+                    <button type="button" class="btn btn-outline ms-1" style="border-color: rgb(50, 50, 77); color: rgb(50, 50, 77);">
+                        All Blogs
+                    </button>
+                  </div>
+                </div>
+              </div>
+              <div class="card mb-4 mb-lg-0">
+                <div class="card-body p-0">
+                  <ul class="list-group list-group-flush rounded-3">
+                    <li class="list-group-item d-flex justify-content-between align-items-center p-3">
+                      <i class="fas fa-globe fa-lg text-warning"></i>
+                      <p class="mb-0">https://mdbootstrap.com</p>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between align-items-center p-3">
+                      <i class="fab fa-github fa-lg" style="color: #333333;"></i>
+                      <p class="mb-0">mdbootstrap</p>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between align-items-center p-3">
+                      <i class="fab fa-twitter fa-lg" style="color: #55acee;"></i>
+                      <p class="mb-0">@mdbootstrap</p>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between align-items-center p-3">
+                      <i class="fab fa-instagram fa-lg" style="color: #ac2bac;"></i>
+                      <p class="mb-0">mdbootstrap</p>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between align-items-center p-3">
+                      <i class="fab fa-facebook-f fa-lg" style="color: #3b5998;"></i>
+                      <p class="mb-0">mdbootstrap</p>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-8">
+              <div class="card mb-4">
+                <div class="card-body">
+                  <div class="row">
+                    <div class="col-sm-3">
+                      <p class="mb-0">Full Name</p>
                     </div>
-
-                    <div class="card-body pt-2">
-
-                        <table class="table">
-                            <tbody>
-                              <tr>
-                                <th scope="row">Total Blogs : </th>
-                                <td><%= blogsCount%></td>
-                                <td></td>
-                              </tr>
-                              <tr>
-                                <th scope="row">Full Name : </th>
-                                <td id="fullname"><%= userDetails.getUser_full_name()%></td>
-                                <td><a href="#"><span id="fullname-update-btn" class="fa fa-edit"></span></a></td>
-                              </tr>
-                              <tr>
-                                <th scope="row">Email : </th>
-                                <td  id="email"><%= user.getUser_email()%> </td>
-                                <td><a href="#"><span id="email-update-btn" class="fa fa-edit"></span></a></td>
-                              </tr>
-                              <tr>
-                                <th scope="row">Password : </th>
-                                <td id="password">********</td>
-                                <td><a href="#"><span id="password-update-btn" class="fa fa-edit"></span></a></td>
-                              </tr>
-                              <tr>
-                                <th scope="row">Gender : </th>
-                                <td><%= user.getUser_gender()%> </td>
-                                <td></td>
-                              </tr>
-                              <tr>
-                                <th scope="row">D.O.B : </th>
-                                <td id="dob"><%= userDetails.getUser_dob()%></td>
-                                <td><a href="#"><span id="dob-update-btn" class="fa fa-edit"></span></a></td>
-                              </tr>
-                              <tr>
-                                <th scope="row">About me : </th>
-                                <td>
-                                    <div id="about" class="container-fluid p-2" style="max-height: 100px;  border: 1px solid rgb(184, 184, 184); border-radius: 3px; overflow-y: scroll;" >
-                                        <%= userDetails.getUser_about_me()%>
-                                    </div>
-                                </td>
-                                <td><a href="#"><span id="aboutme-update-btn" class="fa fa-edit"></span></a></td>
-                              </tr>
-                              <tr>
-                                <th scope="row">Account <br>Created at : </th>
-                                <td><%= user.getUser_created_at()%></td>
-                                <td></td>
-                              </tr>
-                            </tbody>
-                          </table>
-
+                    <div class="col-sm-9">
+                      <p class="text-muted mb-0" id="fullname"><%= userDetails.getUser_full_name()%>
+                        <a href="#"><span id="fullname-update-btn" class="fa fa-edit mar-left"></span></a> 
+                      </p>
+                    </div>
+                  </div>
+                  <hr>
+                  <div class="row">
+                    <div class="col-sm-3">
+                      <p class="mb-0">Email</p>
+                    </div>
+                    <div class="col-sm-9">
+                      <p class="text-muted mb-0" id="email">
+                        <%= user.getUser_email()%>
+                        <a href="#"><span id="email-update-btn" class="fa fa-edit mar-left"></span></a> 
+                    </p>
+                    </div>
+                  </div>
+                  <hr>
+                  <div class="row">
+                    <div class="col-sm-3">
+                      <p class="mb-0">Password</p>
+                    </div>
+                    <div class="col-sm-9">
+                      <p class="text-muted mb-0" id="password">********
+                      <a href="#"><span id="password-update-btn" class="fa fa-edit mar-left"></span></a> 
+                      </p>
+                    </div>
+                  </div>
+                  <hr>
+                  <div class="row">
+                    <div class="col-sm-3">
+                      <p class="mb-0">Gender</p>
+                    </div>
+                    <div class="col-sm-9">
+                      <p class="text-muted mb-0"><%= user.getUser_gender()%></p>
+                    </div>
+                  </div>
+                  <hr>
+                  <div class="row">
+                    <div class="col-sm-3">
+                      <p class="mb-0">D.O.B</p>
+                    </div>
+                    <div class="col-sm-9">
+                      <p class="text-muted mb-0" id="dob"><%= userDetails.getUser_dob()%>
+                        <a href="#"><span id="dob-update-btn" class="fa fa-edit mar-left"></span></a> 
+                      </p>
+                    </div>
+                  </div>
+                  <hr>
+                  <div class="row">
+                    <div class="col-sm-3">
+                      <p class="mb-0">About</p>
+                    </div>
+                    <div class="col-sm-9">
+                      <p id="about" class="text-muted mb-0"><%= userDetails.getUser_about_me()%>
+                        <a href="#"><span id="aboutme-update-btn" class="fa fa-edit mar-left"></span></a> 
+                      </p>
+                    </div>
+                  </div>
+                  <hr>
+                  <div class="row">
+                    <div class="col-sm-3">
+                      <p class="mb-0">Created at</p>
+                    </div>
+                    <div class="col-sm-9">
+                      <p class="text-muted mb-0"><%= user.getUser_created_at()%>
+                        <!-- <a href="#"><span id="about-update-btn" class="fa fa-edit mar-left"></span></a>  -->
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <br>
+              <h5 style="margin-bottom: 1rem; color: white;">Recent Blogs</h5>
+              
+              <div class="row">
+                <div class="col-md-12">
+                  
+                    <div class="card">
+                        <div class="card-header">Blog Header</div>
+                        <div class="card-title">Blog Title</div>
+                        <div class="card-body">
+                            Blog Content
+                        </div>
+                        <div class="card-footer">Blog Footer</div>
                     </div>
 
                 </div>
+              </div>
+
+              <div class="row">
+                <div class="col-md-12">
+                  
+                    <div class="card my-3">
+                        <div class="card-header">Blog Header</div>
+                        <div class="card-title">Blog Title</div>
+                        <div class="card-body">
+                            Blog Content
+                        </div>
+                        <div class="card-footer">Blog Footer</div>
+                    </div>
+
+                </div>
+              </div>
+
 
             </div>
-
+          </div>
         </div>
+      </section>
 
-    </div>
+
+    <%-- new profile content end --%>
 
 
+    
 
     <!-- </div> -->
 
@@ -182,6 +276,7 @@
 
 
 
+    <%@include file="create_blog.jsp"%>
 
 
       
@@ -552,6 +647,8 @@
 
 
 
+            // file content reader - helper 
+
             const readURL = (input) => {
                 if (input.files && input.files[0]) {
                     var reader = new FileReader();
@@ -565,6 +662,70 @@
                     console.log("Fail") ; 
                 }
             }
+
+
+
+            // add blog 
+
+            $("#blog-upload-btn").click(e => {
+
+            e.preventDefault() ; 
+
+            var blog_title= $("#blog-title").val() ;
+            var blog_tag = $("#blog-tag").val() ; 
+            var blog_content = $("#blog-content").val() ; 
+            var blog_code_content = $("#blog-code-content").val() ; 
+
+            console.log({
+                blog_title, blog_tag, blog_content, blog_code_content
+            })
+
+
+            // make ajax req to servlet to save to db
+
+            $.ajax({
+
+                url: "blog/new" , 
+                type: "POST" , 
+                data : {
+                    "blog-title": blog_title, 
+                    "blog-tag": blog_tag, 
+                    "blog-content": blog_content , 
+                    "blog-code-content": blog_code_content
+                },
+                timeout: 50000 , 
+                success: data => {
+
+                    if (data == "success...") {
+                        swal({
+                        text: "Blog added..." , 
+                        icon: "success"
+                        }).then (val => {
+                            window.location.reload() ;
+                        })
+                    }
+                    else {
+                        swal({
+                        text: data , 
+                        icon: "warning"
+                        }) ;
+                    }
+
+                }, 
+                error: data => {
+                    swal({
+                        text: data , 
+                        icon: "warning"
+                    });
+                }
+
+            // end of ajax call 
+            })
+
+
+            })
+
+
 
 
         })

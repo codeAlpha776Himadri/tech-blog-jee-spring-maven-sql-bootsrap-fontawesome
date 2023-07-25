@@ -5,11 +5,9 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
-import java.nio.file.Files;
 import java.sql.Date;
 import java.text.SimpleDateFormat;
 
-import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.annotation.WebServlet;
@@ -187,6 +185,7 @@ public class UpdateUser extends HttpServlet {
 
                     try {
                         User user = (User) session.getAttribute("user") ;
+                        UserFullDetail userDetails  = (UserFullDetail) session.getAttribute("user-details") ; 
 
                         Part img_part = req.getPart("profile-img") ;
                         String img_filename = ((Integer) user.getUser_id()).toString()+ img_part.getSubmittedFileName() ;
@@ -195,36 +194,32 @@ public class UpdateUser extends HttpServlet {
                             
                             
                             // write image to a local foldor in server
+           
+                            String new_path = req.getRealPath("/") + "images" + File.separator + img_filename ;
+                            String old_path = req.getRealPath("/") + "images" + File.separator + userDetails.getUser_img() ;
+                                    
+                            deleteExistingImage(old_path) ;
 
-                            InputStream stream = img_part.getInputStream() ;
-                            byte data[] = new byte[stream.available()] ;
-                            stream.read(data) ;
-           
-                            String path = req.getRealPath("/") + "images" + File.separator + img_filename ;
-
-                            // deleteExistingImage(path) ;
-           
-                            FileOutputStream op = new FileOutputStream(path) ;
-           
-                            op.write(data) ;
-           
-                            op.close() ;
+                            saveImage(img_part.getInputStream(), new_path) ;
 
 
 
                             // update the session
 
-                            UserFullDetail userDetails = (UserFullDetail) session.getAttribute("user-details") ;
                             userDetails.setUser_img(img_filename);
 
                             out.print("update success...");
                         }
                         else {
+
                             out.print("update failed...") ;
+
                         }
                     } catch (Exception e) {
+
                         e.printStackTrace() ;
                         out.print(e.getMessage()) ;
+
                     }
                     
                 }
@@ -275,7 +270,33 @@ public class UpdateUser extends HttpServlet {
 
         return isDeleted ; 
 
-    } 
+    }
+    
+    
+    public boolean saveImage(InputStream stream, String path) {
+
+        boolean isSaved= false ;
+
+        try {
+            
+            byte data[] = new byte[stream.available()] ;
+            stream.read(data) ;
+           
+            FileOutputStream op = new FileOutputStream(path) ;
+           
+            op.write(data) ;
+           
+            op.close() ;
+            isSaved= true ; 
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+
+        return isSaved ;
+
+    }
 
 
 

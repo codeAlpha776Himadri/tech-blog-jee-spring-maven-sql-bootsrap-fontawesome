@@ -23,7 +23,7 @@ public class GetBlogs extends HttpServlet {
     public static void main(String[] args) {
         
         ApplicationContext blog_ctx = new AnnotationConfigApplicationContext("com/techblog/dao") ;
-        BlogDao blogDao = blog_ctx.getBean("BlogDao", BlogDaoImpl.class) ;
+        // BlogDao blogDao = blog_ctx.getBean("BlogDao", BlogDaoImpl.class) ;
 
         try {
             
