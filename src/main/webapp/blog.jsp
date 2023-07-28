@@ -1,8 +1,16 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@page import="java.util.* , com.techblog.entities.* "%>
+
+<%!
+    User user = null ; 
+%>
 
 <%
-    if (session.getAttribute("blog") == null) {
-        response.sendRedirect("index.jsp") ; 
+    if (session.getAttribute("user") == null) {
+        response.sendRedirect("login.jsp") ; 
+    }
+    else {
+        user = (User) session.getAttribute("user") ;
     }       
 %>
 
@@ -11,7 +19,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Contact Us</title>
+    <title>Blogs</title>
     <link rel="stylesheet" href="styles/index.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
@@ -24,6 +32,12 @@
     /* color: red; */
 }
     </style>
+    <style>
+        #blog-cat {
+            text-decoration: none;
+            font-style: normal;
+        }
+    </style>
 </head>
 <body>
     
@@ -35,7 +49,48 @@
 
     <%-- blog content --%>
 
-    Blog ..... 
+    <div class="container my-3">
+
+
+        <div class="row">
+
+            <!-- catagories section -->
+            <div class="col-md-3" style="min-height: 550px;">
+                <ul class="list-group mb-2">
+                    <li class="list-group-item display-7" style="background-color: rgb(50, 50, 77); color: white; font-size: 20px;">Catagories</li>
+                </ul>
+                <ul class="list-group">
+                    <a href="#" onclick="getBlogsByUserId(<%= user.getUser_id()%>)" id="blog-cat"><li class="list-group-item">My blogs</li></a>
+                    <a href="#" onclick="getAllBlogs()" id="blog-cat"><li class="list-group-item">All blogs</li></a>
+                    <a href="#" onclick="getBlogsByTag('programming')" id="blog-cat"><li class="list-group-item">Programming</li></a>
+                    <a href="#" onclick="getBlogsByTag('politics')" id="blog-cat"><li class="list-group-item ">Politics</li></a>
+                    <a href="#" onclick="getBlogsByTag('sports')" id="blog-cat"><li class="list-group-item">Sports</li></a>
+                    <a href="#" onclick="getBlogsByTag('entertainment')" id="blog-cat"><li class="list-group-item">Entertainment</li></a>
+                  </ul>
+            </div>
+
+            <!-- blogs section -->
+            <div class="col-md-9">
+                <ul class="list-group mb-2 text-center">
+                    <li class="list-group-item display-7" id="blog-section-heading" style="background-color: rgb(50, 50, 77); color: white; font-size: 20px;">All Blogs</li>
+                </ul>
+
+                <div id="loader" class="container text-center mt-5">
+                    <span class="fa fa-refresh fa-spin fa-2x mb-2"></span>
+                    <br>loading...
+                </div>
+
+                <div id="blog-section" class="row">
+                    
+                </div>
+            </div>
+
+
+        </div>
+
+
+
+    </div>
 
 
       
@@ -53,6 +108,104 @@
         integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz"
         crossorigin="anonymous"></script>
     <script src="js/index.js"></script>
+
+
+
+    <script>
+
+    const getAllBlogs = () => {
+
+        $("#blog-section-heading").html("All Blogs") ;
+        $.ajax({
+
+                url: "get_blogs.jsp",  
+                data : {
+                    "get-type" : "all" 
+                }, 
+                success: (data, statusText , jqXHR) => {
+                    $("#loader").hide() ; 
+                    console.log("success : "+data) ; 
+                    $("#blog-section").html(data) ; 
+                }, 
+                error: data => {
+                    $("#loader").hide() ; 
+                    console.log("failed : "+data) ; 
+                    $("#blog-section").html(data) ; 
+                }
+
+            })
+
+
+    }
+
+    function getBlogsByTag(blogCat) {
+
+            $("#loader").show() ; 
+            $("#blog-section-heading").html(blogCat.charAt(0).toUpperCase()+blogCat.slice(1)+" blogs")
+            
+            $.ajax({
+
+                url: "get_blogs.jsp" ,
+                data : {
+                    "blog-tag" : blogCat , 
+                    "get-type" : "by-tag" 
+                }, 
+                success: (data, statusText , jqXHR) => {
+                    $("#loader").hide() ; 
+                    console.log("success data  : "+data) ; 
+                    $("#blog-section").html(data) ; 
+                },
+                error: data => {
+                    $("#loader").hide() ; 
+                    console.log("error data : "+data) ;
+                    $("#blog-section").html(data) ; 
+                }
+
+            })
+        } 
+
+
+        function getBlogsByUserId(userId) {
+            console.log(userId) ; 
+            $("#loader").show() ; 
+            $("#blog-section-heading").html("My Blogs")
+
+            $.ajax({
+
+                url: "get_blogs.jsp",  
+                data : {
+                    "get-type" : "by-user-id" , 
+                    "user-id" : userId 
+                }, 
+                success: (data, statusText , jqXHR) => {
+                    $("#loader").hide() ; 
+                    console.log("success : "+data) ; 
+                    $("#blog-section").html(data) ; 
+                }, 
+                error: data => {
+                    $("#loader").hide() ; 
+                    console.log("failed : "+data) ; 
+                    $("#blog-section").html(data) ; 
+                }
+
+            })
+
+        }
+
+
+        $(document).ready(() => {
+
+        
+            $("#loader").show() ;
+            
+            getAllBlogs() ;
+            
+
+
+        })
+
+    </script>
+
 
 </body>
 </html>

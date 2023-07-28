@@ -24,6 +24,11 @@
     <servlet-class>com.techblog.servlets.Logout</servlet-class>
   </servlet>
 
+  <servlet>
+    <servlet-name>Get-Blogs</servlet-name>
+    <servlet-class>com.techblog.servlets.GetBlogs</servlet-class>
+  </servlet>
+
 
 
 
@@ -61,6 +66,11 @@
     <jsp-file>/profile.jsp</jsp-file>
   </servlet>
 
+  <servlet>
+    <servlet-name>blog-page</servlet-name>
+    <jsp-file>/blog.jsp</jsp-file>
+  </servlet>
+
 
 
 
@@ -81,6 +91,11 @@
   <servlet-mapping>
     <servlet-name>Logout</servlet-name>
     <url-pattern>/Logout</url-pattern>
+  </servlet-mapping>
+
+  <servlet-mapping>
+    <servlet-name>Get-Blogs</servlet-name>
+    <url-pattern>/GetBlogs</url-pattern>
   </servlet-mapping>
 
 
@@ -118,6 +133,11 @@
   <servlet-mapping>
     <servlet-name>profile-page</servlet-name>
     <url-pattern>/profile</url-pattern>
+  </servlet-mapping>
+
+  <servlet-mapping>
+    <servlet-name>blog-page</servlet-name>
+    <url-pattern>/blog</url-pattern>
   </servlet-mapping>
 
 

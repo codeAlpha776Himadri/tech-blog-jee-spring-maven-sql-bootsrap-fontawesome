@@ -94,7 +94,7 @@
                         New Blog
                     </button>
                     <button type="button" class="btn btn-outline ms-1" style="border-color: rgb(50, 50, 77); color: rgb(50, 50, 77);">
-                        All Blogs
+                        My Blogs
                     </button>
                   </div>
                 </div>

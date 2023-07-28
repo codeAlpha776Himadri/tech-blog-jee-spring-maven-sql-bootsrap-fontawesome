@@ -45,6 +45,8 @@ public class UpdateUser extends HttpServlet {
             ApplicationContext user_ctx = new AnnotationConfigApplicationContext("com/techblog/dao") ;
             UserDao userDao = user_ctx.getBean("UserDao",UserDaoImpl.class) ;
 
+            updatedValue = updatedValue.trim() ;
+
             switch(updateParameter) {
 
                 case "user-name" : {

@@ -37,18 +37,6 @@ background-color: rgb(50, 50, 77);
                     <a class="nav-link " aria-current="page" href="home"> <span class="fa-solid fa-house"
                             style="color: white;"></span> Home</a>
                 </li>
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
-                        aria-expanded="false">
-                        <span class="fa fa-check-square-o" style="color: white;"></span>
-                        Catagories
-                    </a>
-                    <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="#">Technology</a></li>
-                        <li><a class="dropdown-item" href="#">Entertainment</a></li>
-                        <li><a class="dropdown-item" href="#">Programming</a></li>
-                    </ul>
-                </li>
 
                 <%
                     if (session.getAttribute("user") == null) {
@@ -66,6 +54,15 @@ background-color: rgb(50, 50, 77);
                                     Signup</a>
                             </li>
                         
+                        <%
+                    }
+                    else {
+                        %>
+                            <li class="nav-item" style="cursor: pointer;">
+                                <a class="nav-link" href="blog">
+                                    <span class="fa fa-reorder" style="color: white;"></span>
+                                    Blog</a>
+                            </li>
                         <%
                     }
                 %>
@@ -91,7 +88,7 @@ background-color: rgb(50, 50, 77);
                                     </a>
                             </li>
                             <li class="nav-item">
-                                <a id="logout-btn" class="nav-link" href="Logout"> <span class="fa fa-user-times" style="color: white;"></span>
+                                <a id="logout-btn" class="nav-link" href="Logout"> <span class="fa fa-power-off" style="color: white;"></span>
                                     Logout</a>
                             </li>
                         </ul>

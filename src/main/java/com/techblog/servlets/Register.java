@@ -103,9 +103,9 @@ public class Register extends HttpServlet {
 
     public static void main(String[] args) {
 
-        // ApplicationContext user_ctx = new AnnotationConfigApplicationContext("com/techblog/dao");
+        ApplicationContext user_ctx = new AnnotationConfigApplicationContext("com/techblog/dao");
 
-        // UserDao userDao = user_ctx.getBean("UserDao", UserDaoImpl.class);
+        UserDao userDao = user_ctx.getBean("UserDao", UserDaoImpl.class);
 
         try {
 
@@ -123,13 +123,16 @@ public class Register extends HttpServlet {
 
             // System.out.println(userDao.getUserFullDetailByUserId(user.getUser_id()).getUser_dob()) ;
 
+            User user = userDao.getUserById(1) ; 
+            System.out.println(user);
+
         } catch (Exception e) {
 
             e.printStackTrace();
 
         } finally {
 
-            // ((AnnotationConfigApplicationContext) user_ctx).close();
+            ((AnnotationConfigApplicationContext) user_ctx).close();
 
         }
 

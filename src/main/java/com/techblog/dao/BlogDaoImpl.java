@@ -106,6 +106,30 @@ public class BlogDaoImpl implements BlogDao {
     }
 
 
+    @Override
+    public List<Blog> getAllBlogs() throws Exception {
+
+        List<Blog> blogs = null ;
+
+
+        try {
+            
+            String query = "select blog_id, user_id, blog_tag, blog_content, blog_created_at,blog_title, blog_code_content from blogs ;" ;
+            blogs = this.jdbcTemplate.query(query, new RowMapperImplBlog()) ;
+
+        } catch (Exception e) {
+            
+            e.printStackTrace() ;
+            throw e ; 
+            
+        }
+
+
+        return blogs ;
+
+    }
+
+
 
 
 

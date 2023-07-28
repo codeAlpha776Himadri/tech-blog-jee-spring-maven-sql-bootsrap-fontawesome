@@ -347,7 +347,7 @@ public class UserDaoImpl implements UserDao {
             
             String query = "select user_id, user_name, user_email, user_password, user_gender, user_created_at from users where user_id=? ;" ;
             List<User> users = this.jdbcTemplate.query(query, new RowMapperImplUser() ,user_id) ;
-            if (users != null && users.size() > 1) {
+            if (users != null && users.size() >= 1) {
                 user = users.get(0) ;
             }
 
