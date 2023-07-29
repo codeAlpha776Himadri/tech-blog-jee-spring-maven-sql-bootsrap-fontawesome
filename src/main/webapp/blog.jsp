@@ -26,10 +26,16 @@
     <script src="https://kit.fontawesome.com/05981e6d7e.js" crossorigin="anonymous"></script>
 
     <style>
-        .bg-primary-local, 
-        .swal-button {
-    background-color: rgb(50, 50, 77);
-    /* color: red; */
+    .bg-primary-local, 
+    .swal-button {
+        background-color: rgb(50, 50, 77);
+        /* color: red; */
+    }
+    .list-group-item.active {
+    z-index: 2;
+    color: #f8f8f8;
+    background-color: #32324d;
+    border-color: #32324d;
 }
     </style>
     <style>
@@ -60,12 +66,12 @@
                     <li class="list-group-item display-7" style="background-color: rgb(50, 50, 77); color: white; font-size: 20px;">Catagories</li>
                 </ul>
                 <ul class="list-group">
-                    <a href="#" onclick="getBlogsByUserId(<%= user.getUser_id()%>)" id="blog-cat"><li class="list-group-item">My blogs</li></a>
-                    <a href="#" onclick="getAllBlogs()" id="blog-cat"><li class="list-group-item">All blogs</li></a>
-                    <a href="#" onclick="getBlogsByTag('programming')" id="blog-cat"><li class="list-group-item">Programming</li></a>
-                    <a href="#" onclick="getBlogsByTag('politics')" id="blog-cat"><li class="list-group-item ">Politics</li></a>
-                    <a href="#" onclick="getBlogsByTag('sports')" id="blog-cat"><li class="list-group-item">Sports</li></a>
-                    <a href="#" onclick="getBlogsByTag('entertainment')" id="blog-cat"><li class="list-group-item">Entertainment</li></a>
+                    <a href="#" onclick="getBlogsByUserId(<%= user.getUser_id()%>,this)" id="blog-cat"><li class="list-group-item  c-link">My blogs</li></a>
+                    <a href="#"  onclick="getAllBlogs(this)" id="blog-cat"><li class="list-group-item  c-link">All blogs</li></a>
+                    <a href="#"  onclick="getBlogsByTag('programming',this)" id="blog-cat"><li class="list-group-item  c-link">Programming</li></a>
+                    <a href="#"  onclick="getBlogsByTag('politics',this)" id="blog-cat"><li class="list-group-item  c-link">Politics</li></a>
+                    <a href="#"  onclick="getBlogsByTag('sports',this)" id="blog-cat"><li class="list-group-item  c-link">Sports</li></a>
+                    <a href="#"  onclick="getBlogsByTag('entertainment',this)" id="blog-cat"><li class="list-group-item  c-link">Entertainment</li></a>
                   </ul>
             </div>
 
@@ -113,9 +119,13 @@
 
     <script>
 
-    const getAllBlogs = () => {
+    const getAllBlogs = (el) => {
 
         $("#blog-section-heading").html("All Blogs") ;
+        $("#blog-section").hide() ;
+        $("#loader").show() ;
+        $(".c-link").removeClass('active') ;
+        
         $.ajax({
 
                 url: "get_blogs.jsp",  
@@ -124,13 +134,17 @@
                 }, 
                 success: (data, statusText , jqXHR) => {
                     $("#loader").hide() ; 
+                    $("#blog-section").show() ;
                     console.log("success : "+data) ; 
                     $("#blog-section").html(data) ; 
+                    $(el).children(".c-link").addClass('active')
                 }, 
                 error: data => {
-                    $("#loader").hide() ; 
+                    $("#loader").hide() ;
+                    $("#blog-section").show() ; 
                     console.log("failed : "+data) ; 
                     $("#blog-section").html(data) ; 
+                    $(el).children(".c-link").addClass('active')
                 }
 
             })
@@ -138,10 +152,12 @@
 
     }
 
-    function getBlogsByTag(blogCat) {
+    function getBlogsByTag(blogCat,el) {
 
             $("#loader").show() ; 
+            $("#blog-section").hide() ;
             $("#blog-section-heading").html(blogCat.charAt(0).toUpperCase()+blogCat.slice(1)+" blogs")
+            $(".c-link").removeClass('active') ; 
             
             $.ajax({
 
@@ -152,23 +168,29 @@
                 }, 
                 success: (data, statusText , jqXHR) => {
                     $("#loader").hide() ; 
+                    $("#blog-section").show() ;
                     console.log("success data  : "+data) ; 
                     $("#blog-section").html(data) ; 
+                    $(el).children(".c-link").addClass('active') 
                 },
                 error: data => {
                     $("#loader").hide() ; 
+                    $("#blog-section").show() ;
                     console.log("error data : "+data) ;
-                    $("#blog-section").html(data) ; 
+                    $("#blog-section").html(data) ;
+                    $(el).children(".c-link").addClass('active') 
                 }
 
             })
         } 
 
 
-        function getBlogsByUserId(userId) {
+        function getBlogsByUserId(userId,el) {
             console.log(userId) ; 
             $("#loader").show() ; 
-            $("#blog-section-heading").html("My Blogs")
+            $("#blog-section").hide() ;
+            $("#blog-section-heading").html("My Blogs") ; 
+            $('.c-link').removeClass('active') ;
 
             $.ajax({
 
@@ -179,13 +201,17 @@
                 }, 
                 success: (data, statusText , jqXHR) => {
                     $("#loader").hide() ; 
+                    $("#blog-section").show() ;
                     console.log("success : "+data) ; 
                     $("#blog-section").html(data) ; 
+                    $(el).children(".c-link").addClass('active')
                 }, 
                 error: data => {
                     $("#loader").hide() ; 
+                    $("#blog-section").show() ;
                     console.log("failed : "+data) ; 
                     $("#blog-section").html(data) ; 
+                    $(el).children(".c-link").addClass('active')
                 }
 
             })
@@ -194,13 +220,10 @@
 
 
         $(document).ready(() => {
-
-        
-            $("#loader").show() ;
             
-            getAllBlogs() ;
-            
-
+            let allPostsRef = $('[id="blog-cat"]')[1] ; 
+            console.log("allPostsRef : ",allPostsRef) ; 
+            getAllBlogs(allPostsRef) ;
 
         })
 

@@ -41,17 +41,41 @@
                             String author = user == null ? "Guest" : user.getUser_name() ;
 
                         %>
+                            <style>
+
+                                .btn-outline-primary {
+                                    --bs-btn-color: rgb(50, 50, 77);
+                                    --bs-btn-border-color: rgb(50, 50, 77);
+                                    --bs-btn-hover-color: #fff;
+                                    --bs-btn-hover-bg: rgb(50, 50, 77);
+                                    --bs-btn-hover-border-color: rgb(50, 50, 77);
+                                }
+                                
+                            </style>
                             <div class='col-md-6 mb-3'>
                                 <div class='card'>
-                                    <div class="card-header">
-                                        <b><%= blog.getBlog_title()%></b>
-                                    </div>
-                                    <img src="https://www.minddevelopmentanddesign.com/wp-content/uploads/2016/03/bg-img.png" class="card-img-top" alt="img">
+                                    <img src="https://previews.123rf.com/images/peshkov/peshkov1910/peshkov191000662/133391293-creative-blogging-sketch-on-white-brick-wall-background-blog-and-media-concept-3d-rendering.jpg" class="card-img-top" alt="img" style="height: 8rem;">
                                     <div class="card-body">
-                                        <b>Author</b> : <i><%= author%></i><br>
-                                        <div style="color: grey"><%= blog.getBlog_created_at()%></div>
+                                        <div class="card-title" style="font-size: 18px">
+                                            <b><%= blog.getBlog_title()%></b>
+                                        </div>
+                                        <div style="font-size: 14px">
+                                            <b>Author</b> : <i><%= author%></i><br>
+                                        </div>
+                                        <div style="color: grey; font-size: 13px;"><%= blog.getBlog_created_at()%></div>
                                         <hr>
                                         <%= blog.getBlog_content()%>
+                                    </div>
+                                    <div class="card-footer text-center" style="background-color: white;">
+                                        <a href="single_blog_page.jsp?blog_id=<%= blog.getBlog_id()%>" class="btn btn-outline-primary btn-sm">Read more...</a>
+                                        <button class="btn btn-outline-primary btn-sm">
+                                            <span class="fa fa-thumbs-o-up"></span>
+                                            <span id="like-count">101</span>
+                                        </button>
+                                        <button class="btn btn-outline-primary btn-sm">
+                                            <span class="fa fa-comment-o"></span>
+                                            <span id="comment-count">101</span>
+                                        </button>
                                     </div>
                                 </div>
                             </div>
@@ -103,20 +127,44 @@
                                 User blogUser = userDao.getUserById(blog.getUser_id()) ;
                                 String author = blogUser == null ? "Guest" : blogUser.getUser_name() ;
                             %>
-                            <div class='col-md-6 mb-3'>
-                                <div class='card'>
-                                    <div class="card-header">
-                                        <b><%= blog.getBlog_title()%></b>
-                                    </div>
-                                    <img src="https://www.minddevelopmentanddesign.com/wp-content/uploads/2016/03/bg-img.png" class="card-img-top" alt="img">
-                                    <div class="card-body">
-                                        <b>Author</b> : <i><%= author%></i><br>
-                                        <div style="color: grey"><%= blog.getBlog_created_at()%></div>
-                                        <hr>
-                                        <%= blog.getBlog_content()%>
+                              <style>
+
+                                    .btn-outline-primary {
+                                        --bs-btn-color: rgb(50, 50, 77);
+                                        --bs-btn-border-color: rgb(50, 50, 77);
+                                        --bs-btn-hover-color: #fff;
+                                        --bs-btn-hover-bg: rgb(50, 50, 77);
+                                        --bs-btn-hover-border-color: rgb(50, 50, 77);
+                                    }
+                                    
+                                </style>
+                                <div class='col-md-6 mb-3'>
+                                    <div class='card'>
+                                        <img src="https://previews.123rf.com/images/peshkov/peshkov1910/peshkov191000662/133391293-creative-blogging-sketch-on-white-brick-wall-background-blog-and-media-concept-3d-rendering.jpg" class="card-img-top" alt="img" style="height: 8rem;">
+                                        <div class="card-body">
+                                            <div class="card-title" style="font-size: 18px">
+                                                <b><%= blog.getBlog_title()%></b>
+                                            </div>
+                                            <div style="font-size: 14px">
+                                                <b>Author</b> : <i><%= author%></i><br>
+                                            </div>
+                                            <div style="color: grey; font-size: 13px;"><%= blog.getBlog_created_at()%></div>
+                                            <hr>
+                                            <%= blog.getBlog_content()%>
+                                        </div>
+                                        <div class="card-footer text-center" style="background-color: white;">
+                                            <a href="single_blog_page.jsp?blog_id=<%= blog.getBlog_id()%>" class="btn btn-outline-primary btn-sm">Read more...</a>
+                                            <button class="btn btn-outline-primary btn-sm">
+                                                <span class="fa fa-thumbs-o-up"></span>
+                                                <span id="like-count">101</span>
+                                            </button>
+                                            <button class="btn btn-outline-primary btn-sm">
+                                                <span class="fa fa-comment-o"></span>
+                                                <span id="comment-count">101</span>
+                                            </button>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
                             <%
                             }
                         }
@@ -168,20 +216,44 @@
                                 User user = userDao.getUserById(blog.getUser_id()) ;
                                 String author = user == null ? "Guest" : user.getUser_name() ;
                             %>
-                            <div class='col-md-6 mb-3'>
-                                <div class='card'>
-                                    <div class="card-header">
-                                        <b><%= blog.getBlog_title()%></b>
-                                    </div>
-                                    <img src="https://www.minddevelopmentanddesign.com/wp-content/uploads/2016/03/bg-img.png" class="card-img-top" alt="img">
-                                    <div class="card-body">
-                                        <b>Author</b> : <i><%= author%></i><br>
-                                        <div style="color: grey"><%= blog.getBlog_created_at()%></div>
-                                        <hr>
-                                        <%= blog.getBlog_content()%>
+                              <style>
+
+                                    .btn-outline-primary {
+                                        --bs-btn-color: rgb(50, 50, 77);
+                                        --bs-btn-border-color: rgb(50, 50, 77);
+                                        --bs-btn-hover-color: #fff;
+                                        --bs-btn-hover-bg: rgb(50, 50, 77);
+                                        --bs-btn-hover-border-color: rgb(50, 50, 77);
+                                    }
+                                    
+                                </style>
+                                <div class='col-md-6 mb-3'>
+                                    <div class='card'>
+                                        <img src="https://previews.123rf.com/images/peshkov/peshkov1910/peshkov191000662/133391293-creative-blogging-sketch-on-white-brick-wall-background-blog-and-media-concept-3d-rendering.jpg" class="card-img-top" alt="img" style="height: 8rem;">
+                                        <div class="card-body">
+                                            <div class="card-title" style="font-size: 18px">
+                                                <b><%= blog.getBlog_title()%></b>
+                                            </div>
+                                            <div style="font-size: 14px">
+                                                <b>Author</b> : <i><%= author%></i><br>
+                                            </div>
+                                            <div style="color: grey; font-size: 13px;"><%= blog.getBlog_created_at()%></div>
+                                            <hr>
+                                            <%= blog.getBlog_content()%>
+                                        </div>
+                                        <div class="card-footer text-center" style="background-color: white;">
+                                            <a href="single_blog_page.jsp?blog_id=<%= blog.getBlog_id()%>" class="btn btn-outline-primary btn-sm">Read more...</a>
+                                            <button class="btn btn-outline-primary btn-sm">
+                                                <span class="fa fa-thumbs-o-up"></span>
+                                                <span id="like-count">101</span>
+                                            </button>
+                                            <button class="btn btn-outline-primary btn-sm">
+                                                <span class="fa fa-comment-o"></span>
+                                                <span id="comment-count">101</span>
+                                            </button>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
                             <%
                             }
                         }

@@ -2,16 +2,16 @@
 <%@ page import="com.techblog.entities.*" %>
 
 <%!
-    String username ;  
+    String userName ;  
 %>
 
 <%
     if (session.getAttribute("user") != null) {
         User user = (User) session.getAttribute("user") ;
-        username = user.getUser_name() ; 
+        userName = user.getUser_name() ; 
     }
     else {
-        username = "Profile" ;
+        userName = "Profile" ;
     }
 %>
 
@@ -61,7 +61,13 @@ background-color: rgb(50, 50, 77);
                             <li class="nav-item" style="cursor: pointer;">
                                 <a class="nav-link" href="blog">
                                     <span class="fa fa-reorder" style="color: white;"></span>
-                                    Blog</a>
+                                    Blogs</a>
+                            </li>
+
+                            <li class="nav-item" style="cursor: pointer;">
+                                <a class="nav-link" data-bs-toggle="modal" data-bs-target="#exampleModal" href="">
+                                    <span class="fa fa-plus" style="color: white;"></span>
+                                    New Blog</a>
                             </li>
                         <%
                     }
@@ -84,7 +90,7 @@ background-color: rgb(50, 50, 77);
                             <li class="nav-item" style="cursor: pointer;">
                                 <a class="nav-link" href="profile">
                                     <span class="fa fa-user" style="color: white;"></span>
-                                        <%= username%>
+                                        <%= userName%>
                                     </a>
                             </li>
                             <li class="nav-item">
@@ -99,6 +105,8 @@ background-color: rgb(50, 50, 77);
         </div>
     </div>
 </nav>
+
+<%@include file="create_blog.jsp"%>
 
 <script src="https://code.jquery.com/jquery-3.7.0.min.js"
                         integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g="
@@ -154,6 +162,67 @@ background-color: rgb(50, 50, 77);
             })
 
         })
+
+
+        // add blog 
+
+            $("#blog-upload-btn").click(e => {
+
+            e.preventDefault() ; 
+
+            var blog_title= $("#blog-title").val() ;
+            var blog_tag = $("#blog-tag").val() ; 
+            var blog_content = $("#blog-content").val() ; 
+            var blog_code_content = $("#blog-code-content").val() ; 
+
+            console.log({
+                blog_title, blog_tag, blog_content, blog_code_content
+            })
+
+
+            // make ajax req to servlet to save to db
+
+            $.ajax({
+
+                url: "blog/new" , 
+                type: "POST" , 
+                data : {
+                    "blog-title": blog_title, 
+                    "blog-tag": blog_tag, 
+                    "blog-content": blog_content , 
+                    "blog-code-content": blog_code_content
+                },
+                timeout: 50000 , 
+                success: data => {
+
+                    if (data == "success...") {
+                        swal({
+                        text: "Blog added..." , 
+                        icon: "success"
+                        }).then (val => {
+                            window.location.reload() ;
+                        })
+                    }
+                    else {
+                        swal({
+                        text: data , 
+                        icon: "warning"
+                        }) ;
+                    }
+
+                }, 
+                error: data => {
+                    swal({
+                        text: data , 
+                        icon: "warning"
+                    });
+                }
+
+            // end of ajax call 
+            })
+
+
+            })
 
     })
 

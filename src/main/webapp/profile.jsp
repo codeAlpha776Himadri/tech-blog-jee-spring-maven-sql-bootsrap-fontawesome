@@ -93,8 +93,8 @@
                     <button  type="button" class="btn btn-primary"  data-bs-toggle="modal" data-bs-target="#exampleModal"  style="background-color: rgb(50, 50, 77); border: none;">
                         New Blog
                     </button>
-                    <button type="button" class="btn btn-outline ms-1" style="border-color: rgb(50, 50, 77); color: rgb(50, 50, 77);">
-                        My Blogs
+                    <button id="get-blogs-btn" type="button" class="btn btn-outline ms-1" style="border-color: rgb(50, 50, 77); color: rgb(50, 50, 77);">
+                        Blogs
                     </button>
                   </div>
                 </div>
@@ -302,7 +302,11 @@
 
         $(document).ready(() => {
 
-            console.log("jq active...") ;
+
+            $("#get-blogs-btn").click(e => {
+                e.preventDefault() ;
+                window.location.href="blog" ; 
+            }) ;
 
 
             $("#user-img").change(function() {
@@ -667,63 +671,63 @@
 
             // add blog 
 
-            $("#blog-upload-btn").click(e => {
+            // $("#blog-upload-btn").click(e => {
 
-            e.preventDefault() ; 
+            // e.preventDefault() ; 
 
-            var blog_title= $("#blog-title").val() ;
-            var blog_tag = $("#blog-tag").val() ; 
-            var blog_content = $("#blog-content").val() ; 
-            var blog_code_content = $("#blog-code-content").val() ; 
+            // var blog_title= $("#blog-title").val() ;
+            // var blog_tag = $("#blog-tag").val() ; 
+            // var blog_content = $("#blog-content").val() ; 
+            // var blog_code_content = $("#blog-code-content").val() ; 
 
-            console.log({
-                blog_title, blog_tag, blog_content, blog_code_content
-            })
-
-
-            // make ajax req to servlet to save to db
-
-            $.ajax({
-
-                url: "blog/new" , 
-                type: "POST" , 
-                data : {
-                    "blog-title": blog_title, 
-                    "blog-tag": blog_tag, 
-                    "blog-content": blog_content , 
-                    "blog-code-content": blog_code_content
-                },
-                timeout: 50000 , 
-                success: data => {
-
-                    if (data == "success...") {
-                        swal({
-                        text: "Blog added..." , 
-                        icon: "success"
-                        }).then (val => {
-                            window.location.reload() ;
-                        })
-                    }
-                    else {
-                        swal({
-                        text: data , 
-                        icon: "warning"
-                        }) ;
-                    }
-
-                }, 
-                error: data => {
-                    swal({
-                        text: data , 
-                        icon: "warning"
-                    });
-                }
-
-            // end of ajax call 
-            })
+            // console.log({
+            //     blog_title, blog_tag, blog_content, blog_code_content
+            // })
 
 
-            })
+            // // make ajax req to servlet to save to db
+
+            // $.ajax({
+
+            //     url: "blog/new" , 
+            //     type: "POST" , 
+            //     data : {
+            //         "blog-title": blog_title, 
+            //         "blog-tag": blog_tag, 
+            //         "blog-content": blog_content , 
+            //         "blog-code-content": blog_code_content
+            //     },
+            //     timeout: 50000 , 
+            //     success: data => {
+
+            //         if (data == "success...") {
+            //             swal({
+            //             text: "Blog added..." , 
+            //             icon: "success"
+            //             }).then (val => {
+            //                 window.location.reload() ;
+            //             })
+            //         }
+            //         else {
+            //             swal({
+            //             text: data , 
+            //             icon: "warning"
+            //             }) ;
+            //         }
+
+            //     }, 
+            //     error: data => {
+            //         swal({
+            //             text: data , 
+            //             icon: "warning"
+            //         });
+            //     }
+
+            // // end of ajax call 
+            // })
+
+
+            // })
 
 
 
