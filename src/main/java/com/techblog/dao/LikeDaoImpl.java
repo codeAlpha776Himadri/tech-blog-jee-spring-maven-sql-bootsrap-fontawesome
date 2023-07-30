@@ -13,6 +13,8 @@ public class LikeDaoImpl implements LikeDao {
 
     private JdbcTemplate jdbcTemplate ; 
 
+
+
     @Override
     public boolean likePost(int blog_id, int user_id) throws Exception {
         
@@ -35,6 +37,8 @@ public class LikeDaoImpl implements LikeDao {
 
     }
 
+
+
     @Override
     public boolean dislikePost(int blog_id, int user_id) throws Exception {
         
@@ -56,6 +60,8 @@ public class LikeDaoImpl implements LikeDao {
         return disliked ; 
 
     }
+
+
 
     @Override
     public List<Like> getLikesByBlogId(int blog_id) throws Exception {
@@ -93,6 +99,48 @@ public class LikeDaoImpl implements LikeDao {
         return likes ;
     }
 
+    
+    @Override
+    public Like getLikeByBlogIdAndUserId(int blog_id, int user_id) throws Exception {
+
+        Like like = null ; 
+
+        try {
+            
+            String query = "select like_id, blog_id, user_id, liked_at from likes where blog_id=? and user_id=? ;" ;
+            List<Like> likes = this.jdbcTemplate.query(query, new RowMapper<Like>() {
+
+                @Override
+                public Like mapRow(ResultSet rs, int rowNum) throws SQLException {
+                    Like like = new Like() ; 
+
+                    like.setLike_id(rs.getInt(1));
+                    like.setBlog_id(rs.getInt(2));
+                    like.setUser_id(rs.getInt(3));
+                    like.setLiked_at(rs.getTimestamp(4));
+
+                    return like ;
+                }
+                
+            }, blog_id, user_id) ;
+            
+            if (likes != null && likes.size() >= 1) {
+                like = likes.get(0) ;
+            }
+
+        } catch (Exception e) {
+            
+            e.printStackTrace() ; 
+            throw e ; 
+
+        }
+
+        return like ;
+
+    }
+
+
+    
     public JdbcTemplate getJdbcTemplate() {
         return jdbcTemplate;
     }

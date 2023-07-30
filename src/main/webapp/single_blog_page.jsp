@@ -9,6 +9,9 @@
     User blogUser= null ;
     UserFullDetail userDetails = null ; 
     Blog blog = null  ; 
+    boolean isAlreadyLiked = false; 
+    int blogLikeCount = 0 ; 
+    Like like = null ; 
 %>
 
 <%
@@ -23,6 +26,7 @@
         ApplicationContext ctx = new AnnotationConfigApplicationContext("com/techblog/dao") ; 
         BlogDao blogDao = ctx.getBean("BlogDao", BlogDaoImpl.class) ;
         UserDao userDao = ctx.getBean("UserDao", UserDaoImpl.class) ;
+        LikeDao likeDao = ctx.getBean("LikeDao", LikeDaoImpl.class) ; 
 
         blog = blogDao.getBlogByBlogId(Integer.parseInt(request.getParameter("blog_id"))) ;
         blogUser = userDao.getUserById(blog.getUser_id()) ;
@@ -30,6 +34,17 @@
 
         if (blog == null) {
             response.sendRedirect("login") ; 
+        }
+ 
+        like = likeDao.getLikeByBlogIdAndUserId(blog.getBlog_id(), user.getUser_id()) ;
+
+        if (like != null) {
+            isAlreadyLiked= true ; 
+        }
+
+        List<Like> likes = likeDao.getLikesByBlogId(blog.getBlog_id()) ;
+        if (likes != null) {
+            blogLikeCount = likes.size() ; 
         }
     }
 %>
@@ -87,10 +102,30 @@
         <!-- like section -->
         <div class="row">
             <div class="col-md-8" style="text-align: left;">
-                <a href="#"><span class="fa fa-thumbs-up fa-2x"></span></a>
+                <span id="like-loader" class="fa fa-circle-o-notch fa-spin fa-1.5x"></span>
+                <a id="like-button" href="#" style="text-decoration: none; color: rgb(50, 50, 77);">
+                    <%
+                        if (isAlreadyLiked == false) {
+                        %>
+                            <span id="like-button-symbol" class="fa fa-thumbs-up fa-2x"></span>
+                        <%
+                        }
+                        else {
+                        %>
+                            <span id="like-button-symbol" class="fa fa-thumbs-down fa-2x"></span>
+                            <br>
+                            <span style="font-size: 10px; color: gray;">
+                                <b>liked at </b> 
+                                <%= like.getLiked_at()%>
+                            </span>
+                        <%
+                        }
+                    %>
+                    
+                </a>
             </div>
             <div class="col-md-4" style="text-align: right; font-size: 16px;">
-                <b><i>102 Likes</i></b>
+                <b><i><%= blogLikeCount%> Likes</i></b>
             </div>
         </div>
 
@@ -155,6 +190,137 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz"
         crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.7.0.min.js"
+        integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g="
+        crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.2/sweetalert.min.js"></script>
     <script src="js/prism/prism.js"></script>
+
+
+    <script>
+
+        $(document).ready(() => {
+
+            let isLiked = <%= isAlreadyLiked%> ; 
+
+            $("#like-loader").hide() ;
+
+            $("#like-button").click(e => {
+                
+                e.preventDefault() ; 
+
+                $("#like-loader").show() ;
+                $("#like-button").hide() ;
+
+                if (!isLiked) {
+                    console.log("ready to like") ; 
+
+                    // make ajax req to like
+                    $.ajax({
+
+                        url: "like" , 
+                        type: "POST" , 
+                        data: {
+                            "like-type" : "like" , 
+                            "user-id" : "<%= user.getUser_id()%>" , 
+                            "blog-id" : "<%= blog.getBlog_id()%>"
+                        }, 
+                        success: data => {
+                            if (data == "success") {
+                                isLiked = true ;
+                                <%
+                                    isAlreadyLiked = true ;
+                                %> 
+                                swal({
+                                    text: "you liked this blog..." , 
+                                    icon: "success" 
+                                }).then(val => {
+                                    $("#like-button-symbol").removeClass("fa-thumbs-up") ;
+                                    $("#like-button-symbol").addClass("fa-thumbs-down") ;
+                                    window.location.reload() ;
+                                });
+                                 
+                            }
+                            else {
+                                swal({
+                                    text: data , 
+                                    icon: "warning" 
+                                });
+                            }
+                            $("#like-loader").hide() ;
+                            $("#like-button").show() ;
+                        }, 
+                        error: data => {
+                            swal({
+                                text: "error!!" , 
+                                icon: "warning"
+                            });
+                            $("#like-loader").hide() ;
+                            $("#like-button").show() ;
+                        }
+
+                    })
+                   
+                }
+                else {
+
+                    console.log("ready to dislike") ; 
+                    
+                    
+                    // make ajax req to dislike
+                    $.ajax({
+
+                        url: "like" , 
+                        type: "POST" , 
+                        data: {
+                            "like-type" : "dislike" , 
+                            "user-id" : "<%= user.getUser_id()%>" , 
+                            "blog-id" : "<%= blog.getBlog_id()%>"
+                        }, 
+                        success: data => {
+                            if (data == "success") {
+                                isLiked = false ;
+                                <%
+                                    isAlreadyLiked = false ;
+                                %>  
+                                swal({
+                                    text: "you disliked this blog..." , 
+                                    icon: "success" 
+                                }).then(val => {
+                                    $("#like-button-symbol").addClass("fa-thumbs-up") ;
+                                    $("#like-button-symbol").removeClass("fa-thumbs-down") ;
+                                    window.location.reload() ;
+                                })
+
+                            }
+                            else {
+                                swal({
+                                    text: data , 
+                                    icon: "warning" 
+                                });
+                            }
+                            $("#like-loader").hide() ;
+                            $("#like-button").show() ; 
+                        }, 
+                        error: data => {
+                            swal({
+                                text: "error!!" , 
+                                icon: "warning"
+                            });
+                            $("#like-loader").hide() ;
+                            $("#like-button").show() ;
+                        }
+
+                   }) 
+
+                }
+            })
+
+
+        })
+
+
+    </script>
+
 </body>
 </html>
