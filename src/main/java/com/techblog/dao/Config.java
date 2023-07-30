@@ -44,4 +44,11 @@ public class Config {
         return blogDaoImpl ; 
     }
 
+    @Bean(name = {"LikeDao"})
+    public LikeDaoImpl getLikeDaoImplementation() {
+        LikeDaoImpl likeDaoImpl = new LikeDaoImpl() ;
+        likeDaoImpl.setJdbcTemplate(getJdbcTemplate());
+        return likeDaoImpl ;
+    }
+
 }

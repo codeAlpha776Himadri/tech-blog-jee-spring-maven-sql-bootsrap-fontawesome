@@ -29,6 +29,11 @@
     <servlet-class>com.techblog.servlets.GetBlogs</servlet-class>
   </servlet>
 
+  <servlet>
+    <servlet-name>Like-Handler</servlet-name>
+    <servlet-class>com.techblog.servlets.LikeHandler</servlet-class>
+  </servlet>
+
 
 
 
@@ -96,6 +101,11 @@
   <servlet-mapping>
     <servlet-name>Get-Blogs</servlet-name>
     <url-pattern>/GetBlogs</url-pattern>
+  </servlet-mapping>
+
+  <servlet-mapping>
+    <servlet-name>Like-Handler</servlet-name>
+    <url-pattern>/like</url-pattern>
   </servlet-mapping>
 
 
