@@ -4,6 +4,11 @@
 <%@page import="org.springframework.context.ApplicationContext"%>
 <%@page import="java.lang.*"%>
 
+<%!
+    int likeCount = 0 ; 
+    int commentCount = 0 ; 
+%>
+
 <%
 
     String getType = request.getParameter("get-type") ;
@@ -17,6 +22,8 @@
             ApplicationContext ctx = new AnnotationConfigApplicationContext("com/techblog/dao") ; 
             BlogDao blogDao = ctx.getBean("BlogDao", BlogDaoImpl.class) ;
             UserDao userDao = ctx.getBean("UserDao", UserDaoImpl.class) ; 
+            LikeDao likeDao = ctx.getBean("LikeDao", LikeDaoImpl.class) ; 
+            CommentDao commentDao = ctx.getBean("CommentDao", CommentDaoImpl.class) ; 
             
             switch(getType) {
             
@@ -40,6 +47,12 @@
                             User user = userDao.getUserById(blog.getUser_id()) ; 
                             String author = user == null ? "Guest" : user.getUser_name() ;
 
+                            List<Comment> comments = commentDao.getCommentsByBlogId(blog.getBlog_id()) ;
+                            commentCount = comments.size() ;
+
+                            List<Like> likes = likeDao.getLikesByBlogId(blog.getBlog_id()) ; 
+                            likeCount = likes.size() ;
+
                         %>
                             <style>
 
@@ -50,6 +63,10 @@
                                     --bs-btn-hover-bg: rgb(50, 50, 77);
                                     --bs-btn-hover-border-color: rgb(50, 50, 77);
                                 }
+
+                                .card-body {
+                                    background-color: #32324d12;
+                                }
                                 
                             </style>
                             <div class='col-md-6 mb-3'>
@@ -57,24 +74,24 @@
                                     <img src="https://previews.123rf.com/images/peshkov/peshkov1910/peshkov191000662/133391293-creative-blogging-sketch-on-white-brick-wall-background-blog-and-media-concept-3d-rendering.jpg" class="card-img-top" alt="img" style="height: 8rem;">
                                     <div class="card-body">
                                         <div class="card-title" style="font-size: 18px">
-                                            <b><%= blog.getBlog_title()%></b>
+                                            <i><b><%= blog.getBlog_title()%></b></i>
                                         </div>
                                         <div style="font-size: 14px">
                                             <b>Author</b> : <i><%= author%></i><br>
                                         </div>
                                         <div style="color: grey; font-size: 13px;"><%= blog.getBlog_created_at()%></div>
                                         <hr>
-                                        <%= blog.getBlog_content()%>
+                                        <%= blog.getBlog_content().substring(0, Math.min(100, blog.getBlog_content().length()))+"..."%>
                                     </div>
-                                    <div class="card-footer text-center" style="background-color: white;">
+                                    <div class="card-footer text-center" style="background-color: #32324d2e;">
                                         <a href="single_blog_page.jsp?blog_id=<%= blog.getBlog_id()%>" class="btn btn-outline-primary btn-sm">Read more...</a>
-                                        <button class="btn btn-outline-primary btn-sm">
+                                        <button class="btn btn-outline-primary btn-sm" style="cursor:not-allowed">
                                             <span class="fa fa-thumbs-o-up"></span>
-                                            <span id="like-count">101</span>
+                                            <span id="like-count"><%= likeCount%></span>
                                         </button>
-                                        <button class="btn btn-outline-primary btn-sm">
+                                        <button class="btn btn-outline-primary btn-sm" style="cursor:not-allowed">
                                             <span class="fa fa-comment-o"></span>
-                                            <span id="comment-count">101</span>
+                                            <span id="comment-count"><%= commentCount%></span>
                                         </button>
                                     </div>
                                 </div>
@@ -126,6 +143,13 @@
                             for (Blog blog : blogs) {
                                 User blogUser = userDao.getUserById(blog.getUser_id()) ;
                                 String author = blogUser == null ? "Guest" : blogUser.getUser_name() ;
+
+                                List<Comment> comments = commentDao.getCommentsByBlogId(blog.getBlog_id()) ;
+                                commentCount = comments.size() ;
+        
+                                List<Like> likes = likeDao.getLikesByBlogId(blog.getBlog_id()) ; 
+                                likeCount = likes.size() ;
+
                             %>
                               <style>
 
@@ -136,6 +160,10 @@
                                         --bs-btn-hover-bg: rgb(50, 50, 77);
                                         --bs-btn-hover-border-color: rgb(50, 50, 77);
                                     }
+
+                                    .card-body {
+                                    background-color: #32324d12;
+                                }
                                     
                                 </style>
                                 <div class='col-md-6 mb-3'>
@@ -143,24 +171,24 @@
                                         <img src="https://previews.123rf.com/images/peshkov/peshkov1910/peshkov191000662/133391293-creative-blogging-sketch-on-white-brick-wall-background-blog-and-media-concept-3d-rendering.jpg" class="card-img-top" alt="img" style="height: 8rem;">
                                         <div class="card-body">
                                             <div class="card-title" style="font-size: 18px">
-                                                <b><%= blog.getBlog_title()%></b>
+                                                <i><b><%= blog.getBlog_title()%></b></i>
                                             </div>
                                             <div style="font-size: 14px">
                                                 <b>Author</b> : <i><%= author%></i><br>
                                             </div>
                                             <div style="color: grey; font-size: 13px;"><%= blog.getBlog_created_at()%></div>
                                             <hr>
-                                            <%= blog.getBlog_content()%>
+                                            <%= blog.getBlog_content().substring(0, Math.min(100, blog.getBlog_content().length()))+"..."%>
                                         </div>
-                                        <div class="card-footer text-center" style="background-color: white;">
+                                        <div class="card-footer text-center" style="background-color: #32324d2e;">
                                             <a href="single_blog_page.jsp?blog_id=<%= blog.getBlog_id()%>" class="btn btn-outline-primary btn-sm">Read more...</a>
-                                            <button class="btn btn-outline-primary btn-sm">
+                                            <button class="btn btn-outline-primary btn-sm" style="cursor:not-allowed">
                                                 <span class="fa fa-thumbs-o-up"></span>
-                                                <span id="like-count">101</span>
+                                                <span id="like-count"><%= likeCount%></span>
                                             </button>
-                                            <button class="btn btn-outline-primary btn-sm">
+                                            <button class="btn btn-outline-primary btn-sm" style="cursor:not-allowed">
                                                 <span class="fa fa-comment-o"></span>
-                                                <span id="comment-count">101</span>
+                                                <span id="comment-count"><%= commentCount%></span>
                                             </button>
                                         </div>
                                     </div>
@@ -215,6 +243,13 @@
                             for (Blog blog : blogs) {
                                 User user = userDao.getUserById(blog.getUser_id()) ;
                                 String author = user == null ? "Guest" : user.getUser_name() ;
+
+                                List<Comment> comments = commentDao.getCommentsByBlogId(blog.getBlog_id()) ;
+                                commentCount = comments.size() ;
+            
+                                List<Like> likes = likeDao.getLikesByBlogId(blog.getBlog_id()) ; 
+                                likeCount = likes.size() ;
+
                             %>
                               <style>
 
@@ -225,6 +260,10 @@
                                         --bs-btn-hover-bg: rgb(50, 50, 77);
                                         --bs-btn-hover-border-color: rgb(50, 50, 77);
                                     }
+
+                                    .card-body {
+                                    background-color: #32324d12;
+                                }
                                     
                                 </style>
                                 <div class='col-md-6 mb-3'>
@@ -232,24 +271,24 @@
                                         <img src="https://previews.123rf.com/images/peshkov/peshkov1910/peshkov191000662/133391293-creative-blogging-sketch-on-white-brick-wall-background-blog-and-media-concept-3d-rendering.jpg" class="card-img-top" alt="img" style="height: 8rem;">
                                         <div class="card-body">
                                             <div class="card-title" style="font-size: 18px">
-                                                <b><%= blog.getBlog_title()%></b>
+                                                <i><b><%= blog.getBlog_title()%></b></i>
                                             </div>
                                             <div style="font-size: 14px">
                                                 <b>Author</b> : <i><%= author%></i><br>
                                             </div>
                                             <div style="color: grey; font-size: 13px;"><%= blog.getBlog_created_at()%></div>
                                             <hr>
-                                            <%= blog.getBlog_content()%>
+                                            <%= blog.getBlog_content().substring(0, Math.min(100, blog.getBlog_content().length()))+"..." %>
                                         </div>
-                                        <div class="card-footer text-center" style="background-color: white;">
+                                        <div class="card-footer text-center" style="background-color: #32324d2e;">
                                             <a href="single_blog_page.jsp?blog_id=<%= blog.getBlog_id()%>" class="btn btn-outline-primary btn-sm">Read more...</a>
-                                            <button class="btn btn-outline-primary btn-sm">
+                                            <button class="btn btn-outline-primary btn-sm" style="cursor:not-allowed">
                                                 <span class="fa fa-thumbs-o-up"></span>
-                                                <span id="like-count">101</span>
+                                                <span id="like-count"><%= likeCount%></span>
                                             </button>
-                                            <button class="btn btn-outline-primary btn-sm">
+                                            <button class="btn btn-outline-primary btn-sm" style="cursor:not-allowed">
                                                 <span class="fa fa-comment-o"></span>
-                                                <span id="comment-count">101</span>
+                                                <span id="comment-count"><%= commentCount%></span>
                                             </button>
                                         </div>
                                     </div>

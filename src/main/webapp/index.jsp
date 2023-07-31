@@ -1,5 +1,8 @@
-<%@page contentType="text/html" pageEncoding="UTF-8"%>
-<%@page import="com.techblog.entities.*"%>
+<%@page language="java" contentType="text/html" pageEncoding="UTF-8"%>
+<%@page import="java.util.* , com.techblog.entities.* , com.techblog.dao.* " %>
+<%@page import="org.springframework.context.annotation.AnnotationConfigApplicationContext"%>
+<%@page import="org.springframework.context.ApplicationContext"%>
+<%@page import="java.lang.*"%>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -62,55 +65,11 @@
     <div class="container">
 
 
-        <div class="row mb-3">
-
-            <div class="col-md-4 mb-2">
-                <div class="card">
-                    <div class="card-body">
-                        <h5 class="card-title">Card title</h5>
-                        <p class="blog-author" style="color: gray;">Himadri | <span class="blog-created-at">24th July
-                                2023</span></p>
-                        <p class="card-text">Some quick example text to build on the card title and make up the bulk of
-                            the card's content.</p>
-                        <a href="#" class="btn bg-primary-local" style="color: white;">Read more...</a>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-md-4 mb-2">
-                <div class="card">
-                    <div class="card-body">
-                        <h5 class="card-title">Card title</h5>
-                        <p class="blog-author" style="color: gray;">Himadri | <span class="blog-created-at">24th July
-                                2023</span></p>
-                        <p class="card-text">Some quick example text to build on the card title and make up the bulk of
-                            the card's content.</p>
-                        <a href="#" class="btn bg-primary-local" style="color: white;">Read more...</a>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-md-4 mb-2">
-                <div class="card">
-                    <div class="card-body">
-                        <h5 class="card-title">Card title</h5>
-                        <p class="blog-author" style="color: gray;">Himadri | <span class="blog-created-at">24th July
-                                2023</span></p>
-                        <p class="card-text">Some quick example text to build on the card title and make up the bulk of
-                            the card's content.</p>
-                        <a href="#" class="btn bg-primary-local" style="color: white;">Read more...</a>
-                    </div>
-                </div>
-            </div>
-
-        </div>
-
-
-
+        <%-- home page blogs section --%>
 
         <div class="row mb-3">
 
-            <div class="col-md-4 mb-2">
+            <%-- <div class="col-md-4 mb-2">
                 <div class="card">
                     <div class="card-body">
                         <h5 class="card-title">Card title</h5>
@@ -121,33 +80,52 @@
                         <a href="#" class="btn bg-primary-local" style="color: white;">Read more...</a>
                     </div>
                 </div>
-            </div>
+            </div> --%>
 
-            <div class="col-md-4 mb-2">
-                <div class="card">
-                    <div class="card-body">
-                        <h5 class="card-title">Card title</h5>
-                        <p class="blog-author" style="color: gray;">Himadri | <span class="blog-created-at">24th July
-                                2023</span></p>
-                        <p class="card-text">Some quick example text to build on the card title and make up the bulk of
-                            the card's content.</p>
-                        <a href="#" class="btn bg-primary-local" style="color: white;">Read more...</a>
-                    </div>
-                </div>
-            </div>
+
+            <%-- blogs section --%>
+
+            <%
+                ApplicationContext ctx = new AnnotationConfigApplicationContext("com/techblog/dao") ;
+                BlogDao blogDao = ctx.getBean("BlogDao", BlogDaoImpl.class) ;
+                UserDao userDao = ctx.getBean("UserDao", UserDaoImpl.class) ;
+
+                List<Blog> blogs = blogDao.getAllBlogs() ; 
+
+                for (int i = 0 ; i < Math.min(6, blogs.size()) ; i++) {
+
+                    Blog currentBlog = blogs.get(i) ;
+                    User currentBlogUser = userDao.getUserById(currentBlog.getUser_id()) ; 
+
+                    %>
+                        <div class="col-md-4 mb-2">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h5 class="card-title"><%= currentBlog.getBlog_title()%></h5>
+                                    <p class="blog-author" style="color: gray;"><%= currentBlogUser.getUser_name()%> | <span class="blog-created-at"><%= currentBlog.getBlog_created_at()%></span></p>
+                                    <p class="card-text"><%= currentBlog.getBlog_content().substring(0, Math.min(70, currentBlog.getBlog_content().length()))+"..."%></p>
+                                    <%
+                                        if (session.getAttribute("user") == null) {
+                                        %>
+                                            <a href="login" class="btn btn-primary bg-primary-local btn-sm" style="color: white;">Login to Read more...</a>
+                                        <%
+                                        }
+                                        else {
+                                        %>
+                                            <a href="single_blog_page.jsp?blog_id=<%= currentBlog.getBlog_id()%>" class="btn btn-primary bg-primary-local btn-sm" style="color: white;">Read more...</a>
+                                        <%
+                                        }
+                                    %>
+                                </div>
+                            </div>
+                        </div>
+                    <%
+
+                }
+
+            %>
+
             
-            <div class="col-md-4 mb-2">
-                <div class="card">
-                    <div class="card-body">
-                        <h5 class="card-title">Card title</h5>
-                        <p class="blog-author" style="color: gray;">Himadri | <span class="blog-created-at">24th July
-                                2023</span></p>
-                        <p class="card-text">Some quick example text to build on the card title and make up the bulk of
-                            the card's content.</p>
-                        <a href="#" class="btn bg-primary-local" style="color: white;">Read more...</a>
-                    </div>
-                </div>
-            </div>
 
         </div>
 

@@ -18,7 +18,8 @@
 %>
 
 <%
-    if (session.getAttribute("user") == null || 
+    if (session == null || 
+        session.getAttribute("user") == null || 
         request.getParameter("blog_id") == null) {
         response.sendRedirect("login") ; 
     }
@@ -198,6 +199,7 @@
                     <%
                         if (comments.size() >= 1) {
                             for (Comment comment: comments) {
+
                                 User commentUser = userDao.getUserById(comment.getUser_id()) ;
                                 UserFullDetail commentUserDetails = userDao.getUserFullDetailByUserId(comment.getUser_id()) ;
 
