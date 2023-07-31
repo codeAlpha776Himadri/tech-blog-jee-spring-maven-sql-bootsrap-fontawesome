@@ -34,6 +34,11 @@
     <servlet-class>com.techblog.servlets.LikeHandler</servlet-class>
   </servlet>
 
+  <servlet>
+    <servlet-name>Comment-Handler</servlet-name>
+    <servlet-class>com.techblog.servlets.CommentHandler</servlet-class>
+  </servlet>
+
 
 
 
@@ -106,6 +111,11 @@
   <servlet-mapping>
     <servlet-name>Like-Handler</servlet-name>
     <url-pattern>/like</url-pattern>
+  </servlet-mapping>
+
+  <servlet-mapping>
+    <servlet-name>Comment-Handler</servlet-name>
+    <url-pattern>/comment</url-pattern>
   </servlet-mapping>
 
 

@@ -11,7 +11,10 @@
     Blog blog = null  ; 
     boolean isAlreadyLiked = false; 
     int blogLikeCount = 0 ; 
-    Like like = null ; 
+    Like like = null ;
+    List<Comment> comments = null ; 
+    CommentDao commentDao = null ; 
+    UserDao userDao = null ; 
 %>
 
 <%
@@ -25,8 +28,9 @@
         
         ApplicationContext ctx = new AnnotationConfigApplicationContext("com/techblog/dao") ; 
         BlogDao blogDao = ctx.getBean("BlogDao", BlogDaoImpl.class) ;
-        UserDao userDao = ctx.getBean("UserDao", UserDaoImpl.class) ;
+        userDao = ctx.getBean("UserDao", UserDaoImpl.class) ;
         LikeDao likeDao = ctx.getBean("LikeDao", LikeDaoImpl.class) ; 
+        commentDao = ctx.getBean("CommentDao", CommentDaoImpl.class) ;
 
         blog = blogDao.getBlogByBlogId(Integer.parseInt(request.getParameter("blog_id"))) ;
         blogUser = userDao.getUserById(blog.getUser_id()) ;
@@ -46,6 +50,8 @@
         if (likes != null) {
             blogLikeCount = likes.size() ; 
         }
+
+        comments = commentDao.getCommentsByBlogId(blog.getBlog_id()) ;
     }
 %>
 
@@ -67,6 +73,13 @@
     background-color: rgb(50, 50, 77);
     /* color: red; */
 }
+    .btn-primary {
+        --bs-btn-bg: #32324d;
+        --bs-btn-border-color: #32324d;
+        --bs-btn-hover-color: #fff;
+        --bs-btn-hover-bg: #47476c;
+        --bs-btn-hover-border-color: #46466c;
+    }
     </style>
 </head>
 <body>
@@ -162,19 +175,119 @@
             
             <!-- viewer comment section -->
             <div class="row">
-                <textarea class="form-control" placeholder="Leave a comment here" id="floatingTextarea2" style="height: 100px"></textarea>
-                <button class="btn btn-light btn-sm mt-2">
+                <textarea id="comment-content" class="form-control" placeholder="Leave a comment here" id="floatingTextarea2" style="height: 100px"></textarea>
+                <button id="add-comment-btn" class="btn btn-light btn-sm mt-2">
                     <span class="fa fa-comment"></span>    
                     Comment
                 </button>
             </div>
 
-            <!-- all comments section -->
+
+            <!-- all comments section [will bring all comments using jsp] -->
             <div class="row my-5 py-3">
                 <b><i><span style="color: white;">Comments
                     <span class="fa fa-comments-o"></span>
                 </span></i></b>
                 <hr style="color: whitesmoke;">
+
+                <!-- will bring all comments here -->
+
+                <div id="all-comments-section" class="container-fluid mt-3">
+
+
+                    <%
+                        if (comments.size() >= 1) {
+                            for (Comment comment: comments) {
+                                User commentUser = userDao.getUserById(comment.getUser_id()) ;
+                                UserFullDetail commentUserDetails = userDao.getUserFullDetailByUserId(comment.getUser_id()) ;
+
+                            %>
+                                <!-- individual comment -->
+                                <div class="comment mt-2 mb-2 pt-2" style="background-color: white; border-radius: 4px;">
+                                    <div id="user-time-block" class="row">
+                                        <div class="col-md-8 mx-2 my-1" style="padding-left: 15px;">
+                                            <span style="color: rgb(102, 102, 102); font-size: 12px;"><%= commentUser.getUser_name()%></span> 
+                                            <span><img src="images/<%= commentUserDetails.getUser_img()%>" alt="img" style="height: 33px; width: 33px; border-radius: 50%;"></span>
+                                        </div>
+                                        <div class="col-md-3 my-auto" style="color: rgb(102, 102, 102); font-size: 12px; padding-left: 30px;">
+                                            Comment at <%= comment.getCommented_at()%>
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="col-md-2"></div>
+                                            <div class="col-md-10 p-3 mb-2" style="min-height: 4rem; background-color: rgba(223, 223, 223, 0.76); border-radius: 3px; font-size: 13px;">
+                                                <%= comment.getComment_content()%>
+                                            </div>
+                                        </div>
+
+                                        <%
+                                            if (user.getUser_id() == commentUser.getUser_id()) {
+                                            %>
+                                                <div id="edit-delete-section" class="row py-2 px-5">
+                                                    <div class="col-md-10"></div>
+                                                    <div class="col-md-2">
+                                                        <span>
+                                                            <button class="btn btn-primary btn-sm">Edit</button>
+                                                            <button class="btn btn-primary btn-sm">Delete</button>
+                                                        </span>
+                                                    </div>
+                                                </div>    
+                                            <%
+                                            }
+                                        %>
+
+                                    </div>
+                                </div>
+                                <!-- individual comment end-->
+                            <%
+                            }
+                        }
+                    %>
+
+
+
+
+
+                    <!-- individual comment -->
+                    
+                    <!--
+                    <div class="comment mt-2 mb-2 pt-2" style="background-color: white; border-radius: 4px;">
+                        <div id="user-time-block" class="row">
+                            <div class="col-md-8 mx-2 my-1" style="padding-left: 15px;">
+                                <span style="color: rgb(102, 102, 102); font-size: 12px;">Himadri776</span> 
+                                <span><img src="images/default.png" alt="img" style="height: 30px; width: 30px;"></span>
+                            </div>
+                            <div class="col-md-3 my-auto" style="color: rgb(102, 102, 102); font-size: 12px; padding-left: 30px;">
+                                Comment at 24th july 2023
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-2"></div>
+                                <div class="col-md-10 p-3 mb-2" style="min-height: 4rem; background-color: rgba(223, 223, 223, 0.76); border-radius: 3px; font-size: 13px;">
+                                    lorem gdub
+                                </div>
+                            </div>
+
+                            <div id="edit-delete-section" class="row py-2 px-5">
+                                <div class="col-md-10"></div>
+                                <div class="col-md-2">
+                                    <span>
+                                        <button class="btn btn-primary btn-sm">Edit</button>
+                                        <button class="btn btn-primary btn-sm">Delete</button>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    -->
+                    <!-- individual comment end-->
+
+
+
+
+
+                </div>
+
             </div>
 
         </div>
@@ -314,6 +427,62 @@
                    }) 
 
                 }
+            })
+
+
+
+            // script for adding comment
+
+            $("#add-comment-btn").click(e => {
+
+                e.preventDefault() ; 
+                $("#add-comment-btn").hide() ;
+
+                // make ajax request to comment handler
+
+                $.ajax({
+
+                    url: "comment" , 
+                    type: "POST" , 
+                    data: {
+                        "comment-type" : "add-comment" , 
+                        "user-id" : "<%= user.getUser_id()%>" , 
+                        "blog-id" : "<%= blog.getBlog_id()%>" , 
+                        "comment-content" : $("#comment-content").val() 
+                    }, 
+                    success: data => {
+                        if (data == "success") {
+                            swal({
+                                text: "commment added successfully..." , 
+                                icon: "success"
+                            })
+                            .then(val => {
+                                $("#add-comment-btn").show() ;
+                                window.location.reload() ; 
+                            });
+                        }
+                        else {
+                            swal({
+                                text: data , 
+                                icon: "warning"
+                            })
+                            .then(val => {
+                                $("#add-comment-btn").show() ;
+                            });
+                        }
+                    },
+                    error: data => {
+                        swal({
+                            text: "error uploading comment...", 
+                            icon: "warning"
+                        }).then(val => {
+                            $("#add-comment-btn").show() ;
+                        });
+                    }
+
+                })
+
+
             })
 
 

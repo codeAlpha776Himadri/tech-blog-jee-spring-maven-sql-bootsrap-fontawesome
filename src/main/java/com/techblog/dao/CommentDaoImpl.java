@@ -14,14 +14,14 @@ public class CommentDaoImpl implements CommentDao {
     private JdbcTemplate jdbcTemplate ; 
 
     @Override
-    public boolean addCommentByBlogIdAndUserId(int blog_id, int user_id, String comment_content) throws Exception {
+    public boolean addCommentByBlogIdAndUserId(Comment comment) throws Exception {
         
         boolean isCommented = false ; 
 
         try {
             
             String query = "insert into comments(blog_id, user_id, comment_content) values(?,?,?) ;" ;
-            this.jdbcTemplate.update(query, blog_id, user_id, comment_content) ;
+            this.jdbcTemplate.update(query, comment.getBlog_id(), comment.getUser_id(), comment.getComment_content()) ;
             isCommented= true ; 
 
         } catch (Exception e) {
@@ -43,7 +43,7 @@ public class CommentDaoImpl implements CommentDao {
 
         try {
             
-            String query = "select (comment_id, blog_id, user_id, comment_content, commented_at) from comments where blog_id=? ;" ;
+            String query = "select comment_id, blog_id, user_id, comment_content, commented_at from comments where blog_id=? ;" ;
 
             comments = this.jdbcTemplate.query(query, new RowMapper<Comment>() {
 
@@ -78,14 +78,14 @@ public class CommentDaoImpl implements CommentDao {
     }
 
     @Override
-    public boolean deleteCommentByBlogIdAndCommentId(int blog_id, int user_id) throws Exception {
+    public boolean deleteCommentByCommentId(int comment_id) throws Exception {
         
         boolean isDeleted = false; 
 
         try {
 
-            String query = "delete from comments where blog_id=? and user_id=? ;" ;
-            this.jdbcTemplate.update(query, blog_id, user_id) ;
+            String query = "delete from comments where comment_id=? ;" ;
+            this.jdbcTemplate.update(query, comment_id) ;
             isDeleted= true ; 
             
         } catch (Exception e) {
