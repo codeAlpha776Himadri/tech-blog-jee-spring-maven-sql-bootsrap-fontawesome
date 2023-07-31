@@ -51,4 +51,11 @@ public class Config {
         return likeDaoImpl ;
     }
 
+    @Bean(name = {"CommentDao"})
+    public CommentDaoImpl getCommentDaoImplementation() {
+        CommentDaoImpl commentDaoImpl = new CommentDaoImpl() ;
+        commentDaoImpl.setJdbcTemplate(getJdbcTemplate());
+        return commentDaoImpl ;
+    }
+
 }
