@@ -21,6 +21,7 @@
         .swal-button {
     background-color: rgb(50, 50, 77);
     /* color: red; */
+        border-color: #32324d;
 }
     </style>
 
@@ -69,20 +70,6 @@
 
         <div class="row mb-3">
 
-            <%-- <div class="col-md-4 mb-2">
-                <div class="card">
-                    <div class="card-body">
-                        <h5 class="card-title">Card title</h5>
-                        <p class="blog-author" style="color: gray;">Himadri | <span class="blog-created-at">24th July
-                                2023</span></p>
-                        <p class="card-text">Some quick example text to build on the card title and make up the bulk of
-                            the card's content.</p>
-                        <a href="#" class="btn bg-primary-local" style="color: white;">Read more...</a>
-                    </div>
-                </div>
-            </div> --%>
-
-
             <%-- blogs section --%>
 
             <%
@@ -100,7 +87,7 @@
                     %>
                         <div class="col-md-4 mb-2">
                             <div class="card">
-                                <div class="card-body">
+                                <div class="card-body" style="background-color: #32324d1a;">
                                     <h5 class="card-title"><%= currentBlog.getBlog_title()%></h5>
                                     <p class="blog-author" style="color: gray;"><%= currentBlogUser.getUser_name()%> | <span class="blog-created-at"><%= currentBlog.getBlog_created_at()%></span></p>
                                     <p class="card-text"><%= currentBlog.getBlog_content().substring(0, Math.min(70, currentBlog.getBlog_content().length()))+"..."%></p>
