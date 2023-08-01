@@ -13,6 +13,7 @@
     int blogLikeCount = 0 ; 
     Like like = null ;
     List<Comment> comments = null ; 
+    List<Like> likes = null ; 
     CommentDao commentDao = null ; 
     UserDao userDao = null ; 
 %>
@@ -47,7 +48,7 @@
             isAlreadyLiked= true ; 
         }
 
-        List<Like> likes = likeDao.getLikesByBlogId(blog.getBlog_id()) ;
+        likes = likeDao.getLikesByBlogId(blog.getBlog_id()) ;
         if (likes != null) {
             blogLikeCount = likes.size() ; 
         }
@@ -138,8 +139,8 @@
                     
                 </a>
             </div>
-            <div class="col-md-4" style="text-align: right; font-size: 16px;">
-                <b><i><%= blogLikeCount%> Likes</i></b>
+            <div class="col-md-4" style="text-align: right; font-size: 16px; cursor: pointer;" >
+                <b style="cursor: pointer;" data-bs-toggle="modal" data-bs-target="#LikesModal"><i><%= blogLikeCount%> Likes</i></b>
             </div>
         </div>
 
@@ -198,6 +199,7 @@
 
                     <%
                         if (comments.size() >= 1) {
+
                             for (Comment comment: comments) {
 
                                 User commentUser = userDao.getUserById(comment.getUser_id()) ;
@@ -284,6 +286,59 @@
                     -->
                     <!-- individual comment end-->
 
+
+
+
+                    <!-- users likes view Modal -->
+                    <div class="modal fade" id="LikesModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                            <h5 class="modal-title text-center" id="exampleModalLabel">Likes</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <table class="table table-secondary">
+                                    <tbody>
+
+                                      <%
+                                        if (likes.size() == 0) {
+                                            %>
+                                            <tr>
+                                                <td class="text-center">No likes yet</td>
+                                            </tr>
+                                            <%
+                                        }
+                                        else {
+                                            int ind = 1 ; 
+                                            for (Like userLike : likes) {
+
+                                                User likeUser = userDao.getUserById(userLike.getUser_id()) ;
+                                                UserFullDetail likeUserDetails = userDao.getUserFullDetailByUserId(userLike.getUser_id()) ;
+
+                                                %>
+                                                <tr>
+                                                    <th scope="row" style="font-size: 13px;"><%= ind%></th>
+                                                    <td><span style="font-size: 13px;"><%= likeUser.getUser_name()%></span> <span><img src="images/<%= likeUserDetails.getUser_img()%>" alt="img" style="height: 20px; width: 20%;"></span></td>
+                                                    <td><span style="color: gray; font-size: 13px;"><%= likeUser.getUser_email()%></span></td>
+                                                    <td><span style="color: gray; font-size: 13px;"><%= userLike.getLiked_at()%></span></td>
+                                                </tr>
+                                                <%
+
+                                                ind++ ; 
+                                            }
+                                        }
+                                      %>
+
+
+                                    </tbody>
+                                  </table>
+                            </div>
+                        </div>
+                        </div>
+                    </div>
+  
+                    <!-- users likes view Modal end -->
 
 
 
