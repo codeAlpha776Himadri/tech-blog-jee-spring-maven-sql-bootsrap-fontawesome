@@ -17,12 +17,17 @@
     <title>Tech Blog</title>
 
     <style>
-        .bg-primary-local,
-        .swal-button {
-    background-color: rgb(50, 50, 77);
-    /* color: red; */
+    .bg-primary-local,
+    .swal-button {
+        background-color: rgb(50, 50, 77);
+        /* color: red; */
         border-color: #32324d;
-}
+    }
+    .card-body {
+        border-top-left-radius: 86%;
+        border-left: 4px solid #32324d1a;
+    }
+
     </style>
 
 </head>
@@ -30,12 +35,15 @@
 <body>
 
 
-    <!-- navbar -->
+    <!-- navbar - start -->
 
     <%@include file="navbar.jsp"%>
 
+    <!-- navbar - end -->
 
-    <!-- banner -->
+
+
+    <!-- banner - start -->
 
 
     <div class="container-fluid jumbotron  pt-5 bg-primary-local  clip-path-local">
@@ -59,6 +67,8 @@
                 Join, Its Free...</a>
         </div>
     </div>
+
+    <!-- banner - end -->
 
 
 
@@ -89,7 +99,7 @@
                             <div class="card">
                                 <div class="card-body" style="background-color: #32324d1a;">
                                     <h5 class="card-title"><%= currentBlog.getBlog_title()%></h5>
-                                    <p class="blog-author" style="color: gray;"><%= currentBlogUser.getUser_name()%> | <span class="blog-created-at"><%= currentBlog.getBlog_created_at()%></span></p>
+                                    <p class="blog-author" style="color: gray; font-size: 11px;"><%= currentBlogUser.getUser_name()%> | <span class="blog-created-at"><%= currentBlog.getBlog_created_at()%></span></p>
                                     <p class="card-text"><%= currentBlog.getBlog_content().substring(0, Math.min(70, currentBlog.getBlog_content().length()))+"..."%></p>
                                     <%
                                         if (session.getAttribute("user") == null) {

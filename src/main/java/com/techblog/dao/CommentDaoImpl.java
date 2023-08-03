@@ -20,8 +20,16 @@ public class CommentDaoImpl implements CommentDao {
 
         try {
             
-            String query = "insert into comments(blog_id, user_id, comment_content) values(?,?,?) ;" ;
-            this.jdbcTemplate.update(query, comment.getBlog_id(), comment.getUser_id(), comment.getComment_content()) ;
+            String query = "" ;
+            if (comment.getComment_id() == null) {
+                query = "insert into comments(blog_id, user_id, comment_content) values(?,?,?) ;" ;
+                this.jdbcTemplate.update(query, comment.getBlog_id(), comment.getUser_id(), comment.getComment_content()) ;
+            }
+            else {
+                query = "insert into comments(comment_id, blog_id, user_id, comment_content) values(?,?,?,?) ;" ;
+                this.jdbcTemplate.update(query,comment.getComment_id(), comment.getBlog_id(), comment.getUser_id(), comment.getComment_content()) ;
+            }
+
             isCommented= true ; 
 
         } catch (Exception e) {
@@ -99,6 +107,54 @@ public class CommentDaoImpl implements CommentDao {
         return isDeleted ; 
 
     }
+
+
+
+    public Comment getCommentById(int comment_id) throws Exception {
+
+        Comment comment = null ;
+
+        try {
+            
+            String query = "select comment_id, blog_id, user_id, comment_content, commented_at from comments where comment_id=? ;" ;
+
+            List<Comment> comments = this.jdbcTemplate.query(query, new RowMapper<Comment>() {
+
+                @Override
+                public Comment mapRow(ResultSet rs, int rowNum) throws SQLException {
+                    
+                    Comment comment = new Comment() ;
+
+                    comment.setComment_id(rs.getInt(1)) ;
+                    comment.setBlog_id(rs.getInt(2)) ;
+                    comment.setUser_id(rs.getInt(3)) ;
+                    comment.setComment_content(rs.getString(4));
+                    comment.setCommented_at(rs.getTimestamp(5)) ;
+
+                    return comment ; 
+
+                }
+                
+            }, comment_id) ;
+
+            if (comments != null && comments.size() >=1) {
+                comment = comments.get(0) ;
+            }
+
+
+        } catch (Exception e) {
+            
+            e.printStackTrace();
+            throw e;
+
+        }
+
+
+        return comment ;        
+
+    }
+
+
 
 
     public CommentDaoImpl() {

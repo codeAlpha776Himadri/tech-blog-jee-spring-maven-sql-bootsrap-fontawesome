@@ -231,8 +231,8 @@
                                                     <div class="col-md-10"></div>
                                                     <div class="col-md-2">
                                                         <span>
-                                                            <button class="btn btn-primary btn-sm">Edit</button>
-                                                            <button class="btn btn-primary btn-sm">Delete</button>
+                                                            <button id="comment-edit-btn" class="btn btn-primary btn-sm"  data-bs-toggle="modal" data-bs-target="#editCommentModal<%= comment.getComment_id()%>">Edit</button>
+                                                            <button id="comment-delete-btn" class="btn btn-primary btn-sm" onclick="deleteComment(<%= comment.getComment_id()%>)">Delete</button>
                                                         </span>
                                                     </div>
                                                 </div>    
@@ -241,55 +241,40 @@
                                         %>
 
                                     </div>
+
+                                    <!-- edit comment modal - start -->
+
+                                    <div class="modal fade" id="editCommentModal<%= comment.getComment_id()%>" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                        <div class="modal-dialog">
+                                            <div class="modal-content">
+                                            <div class="modal-header">
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <div class="mb-3">
+                                                    <textarea class="form-control" id="edit-comment-content-<%= comment.getComment_id()%>" rows="3"><%= comment.getComment_content()%></textarea>
+                                                </div>
+                                            </div>
+                                            <div class="modal-footer" id="modal-footer">
+                                                <button onclick="saveEdit(<%= comment.getComment_id()%>)" id="comment-edit-save-btn" type="button" class="btn btn-primary btn-sm" data-bs-dismiss="modal">Save changes</button>
+                                            </div>
+                                            </div>
+                                        </div>
+                                    </div>
+    
+                                    <!-- edit comment modal - end -->
+
                                 </div>
                                 <!-- individual comment end-->
+
                             <%
                             }
                         }
                     %>
 
 
-
-
-
-                    <!-- individual comment -->
-                    
-                    <!--
-                    <div class="comment mt-2 mb-2 pt-2" style="background-color: white; border-radius: 4px;">
-                        <div id="user-time-block" class="row">
-                            <div class="col-md-8 mx-2 my-1" style="padding-left: 15px;">
-                                <span style="color: rgb(102, 102, 102); font-size: 12px;">Himadri776</span> 
-                                <span><img src="images/default.png" alt="img" style="height: 30px; width: 30px;"></span>
-                            </div>
-                            <div class="col-md-3 my-auto" style="color: rgb(102, 102, 102); font-size: 12px; padding-left: 30px;">
-                                Comment at 24th july 2023
-                            </div>
-
-                            <div class="row">
-                                <div class="col-md-2"></div>
-                                <div class="col-md-10 p-3 mb-2" style="min-height: 4rem; background-color: rgba(223, 223, 223, 0.76); border-radius: 3px; font-size: 13px;">
-                                    lorem gdub
-                                </div>
-                            </div>
-
-                            <div id="edit-delete-section" class="row py-2 px-5">
-                                <div class="col-md-10"></div>
-                                <div class="col-md-2">
-                                    <span>
-                                        <button class="btn btn-primary btn-sm">Edit</button>
-                                        <button class="btn btn-primary btn-sm">Delete</button>
-                                    </span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    -->
-                    <!-- individual comment end-->
-
-
-
-
                     <!-- users likes view Modal -->
+
                     <div class="modal fade" id="LikesModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                         <div class="modal-dialog">
                         <div class="modal-content">
@@ -298,7 +283,7 @@
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
                             <div class="modal-body">
-                                <table class="table table-secondary">
+                                <table class="table">
                                     <tbody>
 
                                       <%
@@ -338,9 +323,7 @@
                         </div>
                     </div>
   
-                    <!-- users likes view Modal end -->
-
-
+                    <!-- users likes view Modal - end -->
 
 
                 </div>
@@ -368,6 +351,106 @@
 
 
     <script>
+
+
+        const hideBtn = (this) => {
+            $(this).hide() ; 
+        }
+
+
+        const showBtn = (this) => {
+            $(this).show() ; 
+        }
+
+
+        const deleteComment = (commentId) => {
+            $("#comment-delete-btn").hide() ;
+            $.ajax({
+                url : "comment" , 
+                type : "POST", 
+                data : {
+                    "comment-type" : "delete-comment" , 
+                    "comment-id" : commentId
+                }, 
+                success : data => {
+                    if (data == "success") {
+                        swal({
+                            text: "comment successfully deleted..." , 
+                            icon: "success"
+                        }).then(val => {
+                            $("#comment-delete-btn").show() ;
+                            window.location.reload() ;
+                        })
+                    }
+                    else {
+                        swal({
+                            text: data, 
+                            icon: "warning" 
+                        }).then( val=> {
+                            $("#comment-delete-btn").show() ;
+                        })
+                    }
+                },
+                error : data => {
+                    swal({
+                        text: "error deleting comment..." ,
+                        icon: "warning"
+                    }).then(val => {
+                        $("#comment-delete-btn").show() ;
+                    })
+                }
+            })
+
+        }
+
+ 
+        const saveEdit = (commentId) => {
+            $("#modal-footer").hide() ; 
+            $("#comment-edit-btn").hide() ; 
+            $.ajax({
+
+                url: "comment" , 
+                type: "POST" , 
+                data : {
+                    "comment-type" : "edit-comment", 
+                    "comment-id" : commentId , 
+                    "comment-content" : $("#edit-comment-content-"+commentId).val() 
+                },
+                success : data => {
+                    if ( data == "success") {
+                        swal({
+                            text: "successfully edited comment..." , 
+                            icon: "success"
+                        }).then(val => {
+                            window.location.reload() ;
+                        });
+                    }
+                    else {
+                        swal({
+                            text : data , 
+                            icon : "warning"
+                        }); 
+                        $("#modal-footer").show() ;
+                        $("#comment-edit-btn").show() ; 
+                    }
+                },
+                error : data => {
+                    swal({
+                        text: "edit error!!!" ,
+                        icon: "warning"
+                    }); 
+                    $("#modal-footer").show() ;
+                    $("#comment-edit-btn").show() ; 
+                }
+
+            })
+        }
+
+
+
+
+
+        // on ajax load => 
 
         $(document).ready(() => {
 

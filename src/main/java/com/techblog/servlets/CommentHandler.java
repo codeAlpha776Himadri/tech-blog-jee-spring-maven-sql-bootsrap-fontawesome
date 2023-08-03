@@ -87,6 +87,33 @@ public class CommentHandler extends HttpServlet {
                 }
                 break;
 
+                case "edit-comment" : {
+
+                    String commentContent = req.getParameter("comment-content") ;
+                    if (commentId == null || commentContent == null) {
+                        out.print("insufficient parameters recieved...");
+                    }
+                    else {
+                        Comment comment = commentDao.getCommentById(commentId) ;
+                        if (comment == null) {
+                            out.print("invalid comment id...") ;
+                        }
+                        else {
+                            commentDao.deleteCommentByCommentId(commentId) ;
+                            comment.setComment_id(commentId);
+                            comment.setComment_content(commentContent);
+                            if (commentDao.addCommentByBlogIdAndUserId(comment)) {
+                                out.print("success") ;
+                            }
+                            else {
+                                out.print("cant edit comment...") ;
+                            }
+                        }
+                    }
+
+                }
+                break ;
+
                 default : {
                     out.print("invalid comment-type")  ;
                 }

@@ -4,7 +4,7 @@ import java.sql.Timestamp;
 
 public class Comment {
     
-    private int comment_id ; 
+    private Integer comment_id ; 
     private int blog_id ; 
     private int user_id ;
     private String comment_content ; 
@@ -28,7 +28,7 @@ public class Comment {
         super() ; 
     }
 
-    public int getComment_id() {
+    public Integer getComment_id() {
         return comment_id;
     }
 

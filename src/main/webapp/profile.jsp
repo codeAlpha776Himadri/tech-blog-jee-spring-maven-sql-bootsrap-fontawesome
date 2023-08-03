@@ -1,5 +1,9 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
-<%@page import="com.techblog.entities.*" %>
+
+<%@page import="java.util.* , com.techblog.entities.* , com.techblog.dao.* " %>
+<%@page import="org.springframework.context.annotation.AnnotationConfigApplicationContext"%>
+<%@page import="org.springframework.context.ApplicationContext"%>
+<%@page import="java.lang.*"%>
 
 <%!
     User user; 
@@ -15,6 +19,7 @@
         user = (User) session.getAttribute("user") ;
         userDetails = (UserFullDetail) session.getAttribute("user-details") ;
         blogsCount = (Integer) session.getAttribute("blogs-count") ;
+        
     }
 %>
 
@@ -134,9 +139,7 @@
                       <p class="mb-0">Full Name</p>
                     </div>
                     <div class="col-sm-9">
-                      <p class="text-muted mb-0" id="fullname"><%= userDetails.getUser_full_name()%>
-                        <a href="#"><span id="fullname-update-btn" class="fa fa-edit mar-left"></span></a> 
-                      </p>
+                      <p class="text-muted mb-0" id="fullname"><%= userDetails.getUser_full_name()%><a href="#"><span id="fullname-update-btn" class="fa fa-edit mar-left"></span></a></p>
                     </div>
                   </div>
                   <hr>
@@ -188,9 +191,7 @@
                       <p class="mb-0">About</p>
                     </div>
                     <div class="col-sm-9">
-                      <p id="about" class="text-muted mb-0"><%= userDetails.getUser_about_me()%>
-                        <a href="#"><span id="aboutme-update-btn" class="fa fa-edit mar-left"></span></a> 
-                      </p>
+                      <p id="about" class="text-muted mb-0"><%= userDetails.getUser_about_me()%><a href="#"><span id="aboutme-update-btn" class="fa fa-edit mar-left"></span></a></p>
                     </div>
                   </div>
                   <hr>
@@ -207,37 +208,82 @@
                 </div>
               </div>
               <br>
+
+              
+              <!-- Recent blogs -->
+
               <h5 style="margin-bottom: 1rem; color: white;">Recent Blogs</h5>
               
               <div class="row">
-                <div class="col-md-12">
-                  
-                    <div class="card">
-                        <div class="card-header">Blog Header</div>
-                        <div class="card-title">Blog Title</div>
-                        <div class="card-body">
-                            Blog Content
-                        </div>
-                        <div class="card-footer">Blog Footer</div>
-                    </div>
 
-                </div>
+                <%
+                
+                ApplicationContext ctx = new AnnotationConfigApplicationContext("com/techblog/dao") ;
+                
+                BlogDao blogDao = ctx.getBean("BlogDao", BlogDaoImpl.class) ; 
+                UserDao userDao = ctx.getBean("UserDao", UserDaoImpl.class) ; 
+                LikeDao likeDao = ctx.getBean("LikeDao", LikeDaoImpl.class) ; 
+                CommentDao commentDao = ctx.getBean("CommentDao", CommentDaoImpl.class) ; 
+                
+        
+                List<Blog> allBlogs = blogDao.getAllBlogs() ; 
+
+                for (Blog blog : allBlogs) {
+
+                    User blogUser = userDao.getUserById(blog.getUser_id()) ;
+                    UserFullDetail blogUserFullDetails = userDao.getUserFullDetailByUserId(blog.getUser_id()) ;
+                    int likesCount = likeDao.getLikesByBlogId(blog.getBlog_id()).size() ;
+                    int commentsCount = commentDao.getCommentsByBlogId(blog.getBlog_id()).size() ;
+
+                    %>
+                    
+                      <!-- individual blog -->
+                        <div class="col-md-12 mb-3">
+                        
+                            <div class="card">
+                                <div class="card-header"><b><i><%= blog.getBlog_title()%></i></b></div>
+                                <div class="row">
+                                    <div class="col-md-4 text-center py-1">
+                                        <span style="font-size: 12px; color: gray;"><%= blogUser.getUser_name()%></span>
+                                        <span><img src="images/<%= blogUserFullDetails.getUser_img()%>" alt="img" style="height: 22px; width: 22px; border-radius: 50%;"></span>
+                                    </div>
+                                    <div class="col-md-4"></div>
+                                    <div class="col-md-4 text-center pt-3">
+                                        <span style="color: gray; font-size: 11px;"><%= blog.getBlog_created_at()%></span>
+                                    </div>
+                                </div>
+                                <div class="card-body">
+                                    <%= blog.getBlog_content()%>
+                                </div>
+                                <div class="card-footer">
+                                    <div class="row">
+                                        <div class="col-md-3">
+                                            <a href="single_blog_page.jsp?blog_id=<%= blog.getBlog_id()%>" class="btn btn-primary btn-sm">Read more...</a>
+                                        </div>
+                                        <div class="col-md-5"></div>
+                                        <div class="col-md-2 float-right">
+                                            <span class="fa fa-thumbs-o-up"></span> <%= likesCount%>
+                                        </div>
+                                        <div class="col-md-2 float-left">
+                                            <span class="fa fa-comment-o float-left"></span> <%= commentsCount%>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+
+                    <%
+
+                }
+
+                %>
+
+
+
               </div>
 
-              <div class="row">
-                <div class="col-md-12">
-                  
-                    <div class="card my-3">
-                        <div class="card-header">Blog Header</div>
-                        <div class="card-title">Blog Title</div>
-                        <div class="card-body">
-                            Blog Content
-                        </div>
-                        <div class="card-footer">Blog Footer</div>
-                    </div>
-
-                </div>
-              </div>
+              <!-- recent blogs end -->
 
 
             </div>
@@ -268,7 +314,7 @@
                 </form>
             </div>
             <div class="modal-footer">
-            <button id="img-upload-btn" type="submit" form="img-upload" class="btn btn-primary"   data-bs-dismiss="modal">Save changes</button>
+            <button id="img-upload-btn" type="submit" form="img-upload" class="btn btn-primary btn-sm"   data-bs-dismiss="modal">Save changes</button>
             </div>
         </div>
         </div>
